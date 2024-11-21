@@ -1,13 +1,13 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0" version="24.8.6">
   <diagram name="Page-1" id="hV8_vWimdpn24ltupnvK">
-    <mxGraphModel dx="794" dy="495" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1222" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="Qa07ZEY8zx5-E_0PlGd2-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-2" target="Qa07ZEY8zx5-E_0PlGd2-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" edge="1" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-2" target="Qa07ZEY8zx5-E_0PlGd2-2">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-2" target="Qa07ZEY8zx5-E_0PlGd2-2" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="470" y="220" as="targetPoint" />
             <Array as="points">
@@ -21,7 +21,7 @@
           <mxGeometry x="480" y="240" width="80" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Qa07ZEY8zx5-E_0PlGd2-3" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Conditions&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;C&lt;sub&gt;0&lt;/sub&gt;: T&lt;sub&gt;min&lt;/sub&gt;≤T&lt;sub&gt;bat&lt;/sub&gt;≤T&lt;sub&gt;max&lt;/sub&gt;&lt;/li&gt;&lt;li&gt;C&lt;sub&gt;1&lt;/sub&gt;: V&amp;lt;4.2&lt;i&gt;V&lt;/i&gt;&lt;/li&gt;&lt;li&gt;C&lt;sub&gt;2&lt;/sub&gt;: V&amp;lt;V&lt;sub&gt;cutoff&lt;/sub&gt;&lt;/li&gt;&lt;li&gt;C&lt;sub&gt;3&lt;/sub&gt;: V&amp;gt;V&lt;sub&gt;cutoff&lt;/sub&gt;&lt;/li&gt;&lt;li&gt;C&lt;sub&gt;4&lt;/sub&gt;: V=V&lt;sub&gt;preset&lt;/sub&gt;&lt;/li&gt;&lt;li&gt;C&lt;sub&gt;5&lt;/sub&gt;: t&lt;sub&gt;max&lt;/sub&gt;=t&lt;sub&gt;preset&lt;/sub&gt;&lt;/li&gt;&lt;li&gt;C&lt;sub&gt;6&lt;/sub&gt;: I&lt;sub&gt;min&lt;/sub&gt;&amp;lt;0.1C&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" parent="1" vertex="1">
-          <mxGeometry x="40" y="190" width="160" height="170" as="geometry" />
+          <mxGeometry x="40" y="171" width="160" height="170" as="geometry" />
         </mxCell>
         <mxCell id="Qa07ZEY8zx5-E_0PlGd2-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-4" target="Qa07ZEY8zx5-E_0PlGd2-7" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -59,7 +59,7 @@
         <mxCell id="Qa07ZEY8zx5-E_0PlGd2-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-14" target="Qa07ZEY8zx5-E_0PlGd2-22" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=1;" edge="1" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-14" target="Qa07ZEY8zx5-E_0PlGd2-4">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=1;" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-14" target="Qa07ZEY8zx5-E_0PlGd2-4" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="520" y="540" />
@@ -69,7 +69,7 @@
         <mxCell id="Qa07ZEY8zx5-E_0PlGd2-14" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;CC Mode&lt;/font&gt;" style="whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="425" y="520" width="80" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=1;" edge="1" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-17" target="R3Bvoctj_jdyim1rGo82-7">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=1;" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-17" target="R3Bvoctj_jdyim1rGo82-7" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Qa07ZEY8zx5-E_0PlGd2-17" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;End&lt;/font&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -82,7 +82,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=1;" edge="1" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-19" target="Qa07ZEY8zx5-E_0PlGd2-4">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=1;" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-19" target="Qa07ZEY8zx5-E_0PlGd2-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Qa07ZEY8zx5-E_0PlGd2-19" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;TC Mode&lt;/font&gt;" style="whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
@@ -95,7 +95,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=1;" edge="1" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-22" target="Qa07ZEY8zx5-E_0PlGd2-4">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=1;" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-22" target="Qa07ZEY8zx5-E_0PlGd2-4" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="640" y="480" />
@@ -149,13 +149,13 @@
         <mxCell id="Qa07ZEY8zx5-E_0PlGd2-36" value="&lt;div&gt;C&lt;sub&gt;5&lt;/sub&gt;=1 OR C&lt;sub&gt;6&lt;/sub&gt;=1&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="720" y="490" width="90" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-1" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Other Signals&lt;br&gt;&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;V&lt;sub&gt;tok&lt;/sub&gt;: valid data from ADC&lt;/li&gt;&lt;li&gt;Reset: start the process (power-on reset)&lt;br&gt;&lt;/li&gt;&lt;li&gt;Cont: continuous charge and recharge&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" vertex="1" parent="1">
-          <mxGeometry x="40" y="375" width="200" height="145" as="geometry" />
+        <mxCell id="R3Bvoctj_jdyim1rGo82-1" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Other Signals&lt;br&gt;&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;V&lt;sub&gt;tok&lt;/sub&gt;: valid data from ADC&lt;/li&gt;&lt;li&gt;Reset: start the process (power-on reset)&lt;br&gt;&lt;/li&gt;&lt;li&gt;Cont: continuous charge and recharge&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" parent="1" vertex="1">
+          <mxGeometry x="40" y="356" width="200" height="145" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-3" value="reset=1 AND vtok=1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-3" value="reset=1 AND vtok=1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="400" y="280" width="110" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" edge="1" parent="1" source="R3Bvoctj_jdyim1rGo82-7" target="R3Bvoctj_jdyim1rGo82-7">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" parent="1" source="R3Bvoctj_jdyim1rGo82-7" target="R3Bvoctj_jdyim1rGo82-7" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="770" y="230" as="targetPoint" />
             <Array as="points">
@@ -165,32 +165,32 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="R3Bvoctj_jdyim1rGo82-7" target="Qa07ZEY8zx5-E_0PlGd2-2">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="R3Bvoctj_jdyim1rGo82-7" target="Qa07ZEY8zx5-E_0PlGd2-2" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-7" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Stop&lt;/font&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-7" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Stop&lt;/font&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="680" y="240" width="80" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-12" value="cont=0 OR C&lt;sub&gt;2&lt;/sub&gt;=0" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-12" value="cont=0 OR C&lt;sub&gt;2&lt;/sub&gt;=0" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="730" y="170" width="50" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-17" value="vtok=0 OR reset=0" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-17" value="vtok=0 OR reset=0" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="400" y="210" width="40" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-20" value="cont=1 AND C&lt;sub&gt;2&lt;/sub&gt;=1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-20" value="cont=1 AND C&lt;sub&gt;2&lt;/sub&gt;=1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="570" y="240" width="110" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-26" value="&lt;div&gt;C&lt;sub&gt;0&lt;/sub&gt;=0&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-26" value="&lt;div&gt;C&lt;sub&gt;0&lt;/sub&gt;=0&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="520" y="505" width="30" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-27" value="&lt;div&gt;C&lt;sub&gt;0&lt;/sub&gt;=0&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-27" value="&lt;div&gt;C&lt;sub&gt;0&lt;/sub&gt;=0&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="400" y="440" width="30" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-30" value="&lt;div&gt;C&lt;sub&gt;0&lt;/sub&gt;=0&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-30" value="&lt;div&gt;C&lt;sub&gt;0&lt;/sub&gt;=0&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="640" y="500" width="30" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-33" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Aditional Features&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Temperature control: if the temperature increases above T&lt;sub&gt;max&lt;/sub&gt; or below T&lt;sub&gt;min&lt;/sub&gt;,&amp;nbsp;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;it directly goes to Start to correct it&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Continuous Charging Selection: the user can choose if the charging process if continuous, using the signal Cont&lt;br&gt;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;&amp;nbsp;or if the device should just be charged once&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Continuous Charging: if the voltage drops below V&lt;sub&gt;cutoff&lt;/sub&gt;, the charging process&amp;nbsp;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;begins automatically again&lt;br&gt; &lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" vertex="1" parent="1">
-          <mxGeometry x="40" y="540" width="290" height="210" as="geometry" />
+        <mxCell id="R3Bvoctj_jdyim1rGo82-33" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Aditional Features&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Temperature control: if the temperature increases above T&lt;sub&gt;max&lt;/sub&gt; or below T&lt;sub&gt;min&lt;/sub&gt;,&amp;nbsp;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;it directly goes to Start to correct it&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Continuous Charging Selection: the user can choose if the charging process if continuous, using the signal Cont&lt;br&gt;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;&amp;nbsp;or if the device should just be charged once&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Continuous Charging: if the voltage drops below V&lt;sub&gt;cutoff&lt;/sub&gt;, the charging process&amp;nbsp;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;begins automatically again&lt;br&gt; &lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" parent="1" vertex="1">
+          <mxGeometry x="40" y="521" width="290" height="210" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
