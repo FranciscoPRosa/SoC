@@ -192,9 +192,6 @@
         <mxCell id="R3Bvoctj_jdyim1rGo82-33" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Aditional Features&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Temperature control: if the temperature increases above T&lt;sub&gt;max&lt;/sub&gt; or below T&lt;sub&gt;min&lt;/sub&gt;,&amp;nbsp;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;it directly goes to Start to correct it&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Continuous Charging Selection: the user can choose if the charging process if continuous, using the signal Cont&lt;br&gt;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;&amp;nbsp;or if the device should just be charged once&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Continuous Charging: if the voltage drops below V&lt;sub&gt;cutoff&lt;/sub&gt;, the charging process&amp;nbsp;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;begins automatically again&lt;br&gt; &lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" vertex="1" parent="1">
           <mxGeometry x="40" y="540" width="290" height="210" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-34" value="&lt;div&gt;Retirar o cont?&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="330" y="628" width="100" height="30" as="geometry" />
-        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
