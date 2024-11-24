@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0" version="24.8.9">
   <diagram name="Page-1" id="hV8_vWimdpn24ltupnvK">
-    <mxGraphModel dx="965" dy="511" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1016" dy="538" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -162,10 +162,10 @@
         <mxCell id="R3Bvoctj_jdyim1rGo82-1" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Other Signals&lt;br&gt;&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;V&lt;sub&gt;tok&lt;/sub&gt;: valid data from ADC&lt;/li&gt;&lt;li&gt;Reset: start the process (different from power-on reset)&lt;/li&gt;&lt;li&gt;en: module enable signal&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" parent="1" vertex="1">
           <mxGeometry x="40" y="360" width="200" height="140" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-3" value="reset=0 AND en=1 AND vtok=1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="409" y="242" width="110" height="30" as="geometry" />
+        <mxCell id="R3Bvoctj_jdyim1rGo82-3" value="rstz=0 AND en=1 AND vtok=1 AND C&lt;sub&gt;7&lt;/sub&gt;=1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="390" y="242" width="129" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-17" value="&lt;div&gt;vtok=0 OR reset=1&lt;/div&gt;&lt;div&gt;OR en=0&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-17" value="&lt;div&gt;vtok=0 OR rstz=1&lt;/div&gt;&lt;div&gt;OR en=0 OR C&lt;sub&gt;7&lt;/sub&gt;=0&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="425" y="145" width="110" height="35" as="geometry" />
         </mxCell>
         <mxCell id="R3Bvoctj_jdyim1rGo82-26" value="&lt;div&gt;C&lt;sub&gt;0&lt;/sub&gt;=0&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
@@ -177,14 +177,11 @@
         <mxCell id="R3Bvoctj_jdyim1rGo82-30" value="&lt;div&gt;C&lt;sub&gt;0&lt;/sub&gt;=0&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="640" y="460" width="30" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="R3Bvoctj_jdyim1rGo82-33" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Aditional Features&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Temperature control: if the temperature increases above T&lt;sub&gt;max&lt;/sub&gt; or below T&lt;sub&gt;min&lt;/sub&gt;,&amp;nbsp;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;it directly goes to Start to correct it&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Continuous Charging: if the voltage drops below V&lt;sub&gt;recharge&lt;/sub&gt;, the charging process&amp;nbsp;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;begins automatically again&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Full reset: if the reset signal is ever to 1 (for all state but END), it goes directly to the IDLE state to restart the charging process&lt;/li&gt;&lt;li&gt;Maybe add battery protection (???)&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" parent="1" vertex="1">
+        <mxCell id="R3Bvoctj_jdyim1rGo82-33" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Aditional Features&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Temperature control: if the temperature increases above T&lt;sub&gt;max&lt;/sub&gt; or below T&lt;sub&gt;min&lt;/sub&gt;,&amp;nbsp;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;it directly goes to Start to correct it&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Continuous Charging: if the voltage drops below V&lt;sub&gt;recharge&lt;/sub&gt;, the charging process&amp;nbsp;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;begins automatically again&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Full reset: if the reset signal is ever to 1 (for all state but END), it goes directly to the IDLE state to restart the charging process&lt;/li&gt;&lt;li&gt;Battery protection: by allowing &lt;br&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" parent="1" vertex="1">
           <mxGeometry x="40" y="520" width="290" height="209" as="geometry" />
         </mxCell>
-        <mxCell id="7gil-hiqsTWwfiF-RkSV-1" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Notes&lt;/h1&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;I&lt;sub&gt;end&lt;/sub&gt; is defined as 0.1C (10% of the nominal capacity)&lt;/li&gt;&lt;li&gt;V&lt;sub&gt;recharge&lt;/sub&gt; is calculated to be the voltage for which the state of charge (SoC) is 20%&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" parent="1" vertex="1">
-          <mxGeometry x="360" y="600" width="290" height="120" as="geometry" />
-        </mxCell>
-        <mxCell id="7gil-hiqsTWwfiF-RkSV-3" value="&lt;div&gt;C&lt;sub&gt;7&lt;/sub&gt;=1&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="710" y="270" width="30" height="20" as="geometry" />
+        <mxCell id="7gil-hiqsTWwfiF-RkSV-1" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Notes&lt;/h1&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;I&lt;sub&gt;end&lt;/sub&gt; is defined as 0.1C (10% of the nominal capacity)&lt;/li&gt;&lt;li&gt;V&lt;sub&gt;recharge&lt;/sub&gt; is calculated to be the voltage for which the state of charge (SoC) is 20%&lt;/li&gt;&lt;li&gt;The non compliance with the control signals will lead each state to IDLE (not represented in the diagram), and the non compliance with C&lt;sub&gt;0&lt;/sub&gt; will lead each stage to start for cool down (the exception is END). &lt;br&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=default;fillColor=default;" parent="1" vertex="1">
+          <mxGeometry x="360" y="600" width="290" height="190" as="geometry" />
         </mxCell>
         <mxCell id="7gil-hiqsTWwfiF-RkSV-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.308;entryY=0.038;entryDx=0;entryDy=0;entryPerimeter=0;curved=1;" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-4" target="Qa07ZEY8zx5-E_0PlGd2-17" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -194,19 +191,6 @@
         </mxCell>
         <mxCell id="7gil-hiqsTWwfiF-RkSV-10" value="&lt;div&gt;C&lt;sub&gt;5&lt;/sub&gt;=1 OR C&lt;sub&gt;6&lt;/sub&gt;=1&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="730" y="460" width="90" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="7gil-hiqsTWwfiF-RkSV-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="Qa07ZEY8zx5-E_0PlGd2-17" target="Qa07ZEY8zx5-E_0PlGd2-17" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="720" y="350" />
-              <mxPoint x="800" y="350" />
-              <mxPoint x="800" y="420" />
-              <mxPoint x="720" y="420" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="7gil-hiqsTWwfiF-RkSV-12" value="&lt;div&gt;C&lt;sub&gt;7&lt;/sub&gt;=0&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="760" y="330" width="30" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
