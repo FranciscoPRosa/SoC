@@ -108,7 +108,7 @@ end
 always @(state or C0 or C1 or C2 or C3 or C4 or C5 or C6 or C7 or en or rstz or vtok) begin
     case (state)
         idle: begin
-            if (vtok && rstz && en)
+            if (vtok && rstz && en && C7)
                 nxt_state = start;
             else 
                 nxt_state = idle;
@@ -135,7 +135,7 @@ always @(state or C0 or C1 or C2 or C3 or C4 or C5 or C6 or C7 or en or rstz or 
             if (!(vtok && rstz && en)) 
                 nxt_state = idle;
             else if (!C0) 
-                nxt_state = idle;
+                nxt_state = start;
             else if (C3) 
                 nxt_state = ccMode;
             else
@@ -145,7 +145,7 @@ always @(state or C0 or C1 or C2 or C3 or C4 or C5 or C6 or C7 or en or rstz or 
             if (!(vtok && rstz && en)) 
                 nxt_state = idle;
             else if (!C0) 
-                nxt_state = idle;
+                nxt_state = start;
             else if (C4)
                 nxt_state = cvMode;
             else
@@ -155,17 +155,14 @@ always @(state or C0 or C1 or C2 or C3 or C4 or C5 or C6 or C7 or en or rstz or 
             if (!(vtok && rstz && en)) 
                 nxt_state = idle;
             else if (!C0) 
-                nxt_state = idle;
+                nxt_state = start;
             else if (C5 || C6)
                 nxt_state = endC;
             else
                 nxt_state = cvMode;            
         end
         endC: begin
-            if (C7) 
-                nxt_state = idle;
-            else
-                nxt_state = endC;
+            nxt_state = idle;
         end
         default: nxt_state = idle;
     endcase
