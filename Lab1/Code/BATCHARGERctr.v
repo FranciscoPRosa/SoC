@@ -57,13 +57,13 @@ parameter   idle = 3'b000,
 reg C0, C1, C2, C3, C4, C5, C6, C7;
 
 // Value obtained by analyzing the waveform of the charging process
-reg [7:0] vrecharge = 8'b10110101; // B5 in hexadecimal (corresponds to 20% of SoC, or approx. 3.55V)
+reg [7:0] vrecharge = 8'hd5; // B5 in hexadecimal (corresponds to 95% of SoC, or approx. 3.55V)
 
 reg [2:0] state, nxt_state;
 
 // Time updater - it is reset each time start is reached
 // Also it is assumed that the max value is 2^8=255 clock cycles 
-reg [7:0] charge_time;
+reg [7:0] charge_time, counter;
 
 // State updater
 always @(posedge clk) begin
@@ -73,13 +73,16 @@ always @(posedge clk) begin
         state <= nxt_state;
 end
 
-// Time Counter - we assume the time starts beign counted as soon as it 
+// Time Counter
 always @(posedge clk) begin
-    if (state == cvMode)
-        charge_time <= charge_time + 1;
-    else
+    if (state == cvMode) begin
+        counter <= counter + 1;
+        if (counter == 8'hff) 
+            charge_time <= charge_time + 1;
+    end else begin
         charge_time <= 0;
-
+        counter <= 0;
+    end
 end
 
 // Condition updater
