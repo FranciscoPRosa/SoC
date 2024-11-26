@@ -66,7 +66,7 @@ reg [2:0] state, nxt_state;
 reg [7:0] charge_time;
 
 // State updater
-always @(posedge clk or posedge rstz) begin
+always @(posedge clk) begin
     if (!rstz)
         state <= idle;
     else
@@ -74,7 +74,7 @@ always @(posedge clk or posedge rstz) begin
 end
 
 // Time Counter - we assume the time starts beign counted as soon as it 
-always @(posedge clk or posedge rstz) begin
+always @(posedge clk) begin
     if (state == cvMode)
         charge_time <= charge_time + 1;
     else
@@ -83,20 +83,15 @@ always @(posedge clk or posedge rstz) begin
 end
 
 // Condition updater
-always @(posedge clk or posedge rstz or vmonen or tmonen or imonen or vbat or ibat or tbat) begin
-    if (!rstz) begin
-        C0 <= 0; C1 <= 0; C2 <= 0; C3 <= 0;
-        C4 <= 0; C5 <= 0; C6 <= 0; C7 <= 0;
-    end else begin
-        C0 <= ((tempmin <= tbat) && (tbat <= tempmax) && tmonen);
-        C1 <= ((vbat < 8'b11001100) && vmonen); // 4.2 in the scale
-        C2 <= ((vbat < vcutoff) && vmonen);
-        C3 <= ((vbat > vcutoff) && vmonen);
-        C4 <= ((vbat >= vpreset) && vmonen);
-        C5 <= (charge_time >= tmax);
-        C6 <= ((ibat < iend) && imonen);
-        C7 <= ((vbat <= vrecharge) && vmonen); // Recharge condition (simplified for now)
-    end
+always @(*) begin
+    C0 <= ((tempmin <= tbat) && (tbat <= tempmax));
+    C1 <= (vbat < 8'b11001100); // 4.2 in the scale
+    C2 <= (vbat < vcutoff);
+    C3 <= (vbat > vcutoff);
+    C4 <= (vbat == vpreset);
+    C5 <= (charge_time >= tmax);
+    C6 <= (ibat < iend);
+    C7 <= (vbat <= vrecharge); // Recharge condition (simplified for now)
 end
 
 
@@ -105,7 +100,7 @@ end
     For each state, is the enable is disabled, the reset is activated, or if the measures of the ADC are signaled as wrong
     it goes to IDLE until the circuit is ready again
 */
-always @(state or C0 or C1 or C2 or C3 or C4 or C5 or C6 or C7 or en or rstz or vtok) begin
+always @(*) begin : next_state_logic
     case (state)
         idle: begin
             if (vtok && rstz && en && C7)
@@ -169,7 +164,7 @@ always @(state or C0 or C1 or C2 or C3 or C4 or C5 or C6 or C7 or en or rstz or 
 end
 
 
-always @(state) begin : output_logic
+always @(*) begin : output_logic
     // by default, all output are zeroed
     cc = 0; 
     tc = 0; 
@@ -178,7 +173,10 @@ always @(state) begin : output_logic
     vmonen = 0; 
     tmonen = 0;
     case (state)
-        idle: ;
+        idle: begin
+            vmonen = 1;
+            tmonen = 1;
+        end
         start: begin
             vmonen = 1;
             tmonen = 1;
