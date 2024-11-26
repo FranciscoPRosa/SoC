@@ -50,7 +50,7 @@ BATCHARGERlipo lipobattery(
       // Intialization 
       rl_vin = 4.5;  // input voltage
       rl_pgnd = 0.0; // power ground
-      sel[3:0] = 4'b1000;  // 450mAh selection     
+      sel[3:0] = 4'b0001;  // 450mAh selection ==> changed (26/11/2024) by 0001, 100 mAh
       en = 1'b1; // enable the module
 
       // start the simulation
