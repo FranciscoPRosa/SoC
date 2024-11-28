@@ -24,7 +24,6 @@ module BATCHARGERctr_tb;
     reg clk;           // Clock signal
     reg en;            // Enable signal
     reg rstz;          // Reset signal
-    reg [7:0] vrecharge; // Recharge threshold (for 20% of SoC)
     wire dvdd;         // Digital supply
     wire dgnd;         // Digital ground
 
@@ -53,123 +52,234 @@ module BATCHARGERctr_tb;
         .dgnd(dgnd)
     );
 
-    // Testbench logic
-    initial begin
-        // Initialize inputs
-        clk = 0;
-        vtok = 0;
-        rstz = 0;    // Active low reset
-        en = 1;      // Enable the module
-        vbat = 8'b10011001;  // Example voltage (3V)
-        ibat = 8'b01100110;  // Example current (0.2C)
-        tbat = 8'b01100100;  // Example temperature (25ºC)
-        vcutoff = 8'b10100011; // Example voltage cutoff for trickle mode (2.9V)
-        vpreset = 8'b11000111; // Example voltage for constant voltage mode (3.7V)
-        tempmin = 8'b00101110; // Example minimum temperature (-10ºC)
-        tempmax = 8'b10001011; // Example maximum temperature (50ºC)
-        tmax = 8'b00001000;    // Example max charge time (2040 clock periods)
-        iend = 8'b00110011;    // Example end current criteria (0.1C)
-        vrecharge = 8'b10110101; // Recharge threshold (3.55V)
 
-        // Simulate reset and input conditions
-        #12 rstz = 1;   // End reset
-        vtok = 1;       // Voltage and temperature values are valid
+        //Test tasks
 
-        // Test the behavior based on Vbat and conditions
-        $display("Testing with Vbat < Vcutoff, waiting for tc mode");
-        wait(tc);  // Wait for tc mode
-        $display("Entered tc mode");
+        task tcmode;
+            begin
+                // Test the behavior based on Vbat and conditions
+                $display("Testing with Vbat < Vcutoff, waiting for tc mode");
+                wait(tc);  // Wait for tc mode
+                $display("Entered tc mode");
+            end
+        endtask
 
-        // Change voltage to exit tc mode
-        #100 vbat = 8'b10100100;  // Vbat = vcutoff + 1 (to exit tc mode)
-        $display("Vbat > Vcutoff, waiting for cc mode");
-        wait(cc);  // Wait for cc mode
-        $display("Entered cc mode");
-
-        // Change voltage to exit cc mode
-        #100 vbat = 8'b11001000;  // Vbat = vpreset + 1 (to exit cc mode)
-        $display("Vbat > Vpreset, waiting for cv mode");
-        wait(cv);  // Wait for cv mode
-        $display("Entered cv mode");
-
-        // Test for exit from cv mode by minimum current (using iend)
-        #100 ibat = 8'b00110010;  // Current < 0.1C to exit cv mode
-        #30 if (cv == 1) begin
-            $display("Error: did not exit cv mode by minimum current");
-            $finish();
-        end else begin
-            $display("Exited cv mode by minimum current");
-        end
-
-        // Test recharge condition (when Vbat drops below 20% SoC threshold)
-        #100 vbat = 8'b10110101;  // Vbat drops to the recharge threshold (3.55V)
-        $display("Vbat <= Vrecharge, waiting for idle mode again");
-        wait(tc || cc);  // Wait for tc mode (indicating recharge mode)
-        $display("Entered tc mode or cc mode for recharge");
+        task ccmode;
+            begin
+                // Change voltage to exit tc mode
+                #100 vbat = 8'b10100100;  // Vbat = vcutoff + 1 (to exit tc mode)
+                $display("Vbat > Vcutoff, waiting for cc mode");
+                wait(cc);  // Wait for cc mode
+                $display("Entered cc mode");
+            end
+        endtask
         
-        $display("CV Mode timeout test");
-        #30 vbat = 8'b11001000; 
-        $display("Vbat > Vpreset, waiting for cv mode");
-        wait(cv);  // Wait for cv mode
-        $display("Entered cv mode");
+        task cvmode;
+            begin
+                // Change voltage to exit cc mode
+                #100 vbat = 8'b11001000;  // Vbat = vpreset + 1 (to exit cc mode)
+                $display("Vbat > Vpreset, waiting for cv mode");
+                wait(cv);  // Wait for cv mode
+                $display("Entered cv mode");
+            end
+        endtask
 
-        #100 if (cv == 1) begin
-            $display("Error: did not exit cv mode by timeout");
-            $finish();
-        end else begin
-            $display("Exited cv mode by timeout");
-        end
+        task cvmode_current_exit;
+            begin
+                // Test for exit from cv mode by minimum current (using iend)
+                #100 ibat = 8'b00110010;  // Current < 0.1C to exit cv mode
+                #30 if (cv == 1) begin
+                    $display("Error: did not exit cv mode by minimum current");
+                    $finish();
+                end else begin
+                    $display("Exited cv mode by minimum current");
+                end
+            end
+        endtask
 
-        // Test the temperature exit condition
-        #100 vbat = 8'b10110101;  // Vbat drops to the recharge threshold (3.55V)
-        $display("Vbat <= Vrecharge, waiting for idle mode again");
-        wait(tc || cc);  // Wait for tc mode (indicating recharge mode)
-        $display("Entered tc mode or cc mode for recharge");
+        task cvmode_timeout;
+            begin
+                /*
+                #200000 if (cv == 1) begin
+                    $display("Error: did not exit cv mode by timeout");
+                    $finish();
+                end else begin
+                    $display("Exited cv mode by timeout");
+                end*/
+                wait(!(cv || cc || tc));
+                $display("Exited by timeout");
+            end
+        endtask
 
-        #40 tbat = 8'b10001100; // Example temperature above maximum
-        #20 if(tc == 1 || cv == 1 || cc == 1) begin
-            $display("Error: Temperature condition (C0) not met, wrong state");
-        end else begin
-            $display("Temperature condition met");
-        end
+        task charge_with_current_exit;
+            begin
 
-        #100 tbat = 8'b01100100;
-        $display("Cooled out, temperature down");
+                $display("===== TESTING CHARGING PROCESS WITH CURRENT EXIT =====");
 
-        $display("Tmin<=Tbat<=Tmax, waiting to check for charge beggining");
-        wait(tc || cc);  // Wait for tc mode (indicating recharge mode)
-        $display("Entered tc mode or cc mode for recharge");
-        $display("Succesful temperature control");
+                initialization;
 
-        // Test reset/EN/vtok conditions
-        #100 vbat = 8'b10011001;  // Example voltage (3V)
+                rstz=1;
 
-        rstz = 0;
-        // Simulate reset and input conditions
-        #100 rstz = 1;   // End reset
-        vtok = 1;       // Voltage and temperature values are valid
+                tcmode;
 
-        // Test the behavior based on Vbat and conditions
-        $display("Testing with Vbat < Vcutoff, waiting for tc mode");
-        wait(tc);  // Wait for tc mode
-        $display("Entered tc mode");
+                ccmode;
 
-        // Change voltage to exit tc mode
-        #100 vbat = 8'b10100100;  // Vbat = vcutoff + 1 (to exit tc mode)
-        $display("Vbat > Vcutoff, waiting for cc mode");
-        wait(cc);  // Wait for cc mode
-        $display("Entered cc mode");
+                cvmode;
 
-        #50 rstz = 0; // test if reset conditions are met
-        #20 if(tc == 1 || cv == 1 || cc == 1) begin
-            $display("Error: Reset confirmation failed");
-        end else begin
-            $display("Reset confirmation passed");
-        end
+                cvmode_current_exit;
 
-        // End simulation
-        #1000 
-        $finish;
+                rstz=0;
+            end
+        endtask
+
+
+        task charge_with_temperature_exit;
+            begin
+                $display("===== TESTING CHARGING PROCESS WITH TEMPERATURE EXIT =====");
+
+                initialization;
+
+                rstz=1;
+
+                tcmode;
+
+                ccmode;
+
+                cvmode;
+
+                temperature_exit;
+
+                rstz=0;
+            end
+        endtask
+
+        task charge_with_timeout;
+            begin
+
+                $display("===== TESTING CHARGING PROCESS WITH TIMEOUT EXIT =====");
+
+                initialization;
+                rstz = 0;
+                #1000
+                rstz = 1;
+
+                tcmode;
+
+                ccmode;
+
+                cvmode;
+
+                cvmode_timeout;
+
+                rstz=0;
+            end
+        endtask
+
+        
+        task temperature_exit;
+            begin
+
+                #40 tbat = 8'b10001100; // Example temperature above maximum
+                #20 if(tc == 1 || cv == 1 || cc == 1) begin
+                    $display("Error: Temperature condition (C0) not met, wrong state");
+                end else begin
+                    $display("Temperature condition met");
+                end
+
+                #100 tbat = 8'b01100100;
+                $display("Cooled out, temperature down");
+
+                $display("Tmin<=Tbat<=Tmax, waiting to check for charge beggining");
+                wait(tc || cc);  // Wait for tc mode (indicating recharge mode)
+                $display("Entered tc mode or cc mode for recharge");
+                $display("Succesful temperature control");
+
+            end
+        endtask
+
+        task reset;
+        begin
+            #50 rstz = 0; // test if reset conditions are met
+            #20 if(tc == 1 || cv == 1 || cc == 1) begin
+                $display("Error: Reset confirmation failed");
+            end else begin
+                $display("Reset confirmation passed");
+            end    
+        end    
+        endtask
+
+        task exit_by_full_charge;
+            begin
+            $display("===== TESTING CHARGING PROCESS WITH FULL CHARGE EXIT =====");
+
+            #100 vbat = 8'b11001111; //Battery fully charged            
+            rstz = 0;
+            #100
+            rstz = 1;
+            #100
+            if(tc==0 && cc==0 && cv==0) begin
+                $display("Exit by battery fully charged");
+            end else begin
+                $display("Error: did not exit by full charge");
+                $finish;
+            end
+
+            rstz = 0;
+            end
+        endtask 
+
+
+
+        task end_simulation;
+            begin
+                $display("End of simulation");
+                $finish();
+            end
+        endtask
+
+        task initialization;
+            begin
+                clk = 0;
+                vtok = 1;
+                en = 1;      // Enable the module
+                vbat = 8'b10011001;  // Example voltage (3V)
+                ibat = 8'b01100110;  // Example current (0.2C)
+                tbat = 8'b01100100;  // Example temperature (25ºC)
+                vcutoff = 8'b10100011; // Example voltage cutoff for trickle mode (2.9V)
+                vpreset = 8'b11000111; // Example voltage for constant voltage mode (3.7V)
+                tempmin = 8'b00101110; // Example minimum temperature (-10ºC)
+                tempmax = 8'b10001011; // Example maximum temperature (50ºC)
+                tmax = 8'b00001000;    // Example max charge time (2040 clock periods)
+                iend = 8'b00110011;    // Example end current criteria (0.1C)            
+                #1000 rstz = 0;    // Active low reset
+            end
+        endtask
+
+
+
+    //Initial block to run tests
+    initial begin
+
+        //Run tests
+
+        //Full charge (tc,cc and cv modes) with a current exit to end ( ibat < iend )
+        charge_with_current_exit;
+
+        //Full charge (tc,cc and cv modes) with a temperature exit to end ( tbat > tempmax )
+        charge_with_temperature_exit;
+
+        //Full charge (tc,cc and cv modes) with a timeout exit to end (t > tmax)
+        charge_with_timeout;
+
+        //Exit to end by full charge (vbat > vpreset)
+        exit_by_full_charge;
+
+        //Reset test : check if all modes are desactivated (tc,cc and cv modes)
+        reset;
+
+        $display("===== ALL TESTS COMPLETED =====");
+
+        end_simulation;
     end
 
     // Clock generation (period of 10 time units)

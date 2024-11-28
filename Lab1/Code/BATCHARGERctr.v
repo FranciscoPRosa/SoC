@@ -36,12 +36,10 @@ module BATCHARGERctr(
 
 // State parameters
 parameter   idle = 3'b000,
-            start = 3'b001,
-            waitC = 3'b010,
-            tcMode = 3'b011,
-            ccMode = 3'b100,
-            cvMode = 3'b101,
-            endC = 3'b110;
+            tcMode = 3'b001,
+            ccMode = 3'b010,
+            cvMode = 3'b011,
+            endC = 3'b100;
 
 // Each of these registers will always check their respective conditions in real time, to allow for the state change
 /*
@@ -57,11 +55,11 @@ parameter   idle = 3'b000,
 reg C0, C1, C2, C3, C4, C5, C6, C7;
 
 // Value obtained by analyzing the waveform of the charging process
-reg [7:0] vrecharge = 8'hd5; // B5 in hexadecimal (corresponds to 95% of SoC, or approx. 3.55V)
+reg [7:0] vrecharge = 8'hd5; // D5 in hexadecimal (corresponds to 96.2% of SoC, or approx. 4.163V)
 
 reg [2:0] state, nxt_state;
 
-// Time updater - it is reset each time start is reached
+// Time updater - it is reset each time idle is reached
 // Also it is assumed that the max value is 2^8=255 clock cycles 
 reg [7:0] charge_time, counter;
 
@@ -77,21 +75,28 @@ end
 always @(posedge clk) begin
     if (state == cvMode) begin
         counter <= counter + 1;
-        if (counter == 8'hff) 
+        if (counter == 8'hff) begin 
             charge_time <= charge_time + 1;
+            counter <= 0;
+        end
+    end else if (state == endC) begin
+        // No change to counter or charge_time during endC state
+        counter <= counter;
     end else begin
+        // Reset counter and charge_time if not in cvMode or endC
         charge_time <= 0;
         counter <= 0;
     end
 end
+
 
 // Condition updater
 always @(*) begin
     C0 <= ((tempmin <= tbat) && (tbat <= tempmax));
     C1 <= (vbat < 8'b11001100); // 4.2 in the scale
     C2 <= (vbat < vcutoff);
-    C3 <= (vbat > vcutoff);
-    C4 <= (vbat == vpreset);
+    C3 <= (vbat >= vcutoff);
+    C4 <= (vbat >= vpreset);
     C5 <= (charge_time >= tmax);
     C6 <= (ibat < iend);
     C7 <= (vbat <= vrecharge); // Recharge condition (simplified for now)
@@ -106,16 +111,10 @@ end
 always @(*) begin : next_state_logic
     case (state)
         idle: begin
-            if (vtok && rstz && en && C7)
-                nxt_state = start;
-            else 
-                nxt_state = idle;
-        end
-        start: begin
-            if (!(vtok && rstz && en)) 
+            if (!(vtok && rstz && en && C7)) 
                 nxt_state = idle;
             else if (!C0)  
-                nxt_state = waitC;
+                nxt_state = idle;
             else if (!C1)  
                 nxt_state = endC;
             else if (C2)  
@@ -123,17 +122,11 @@ always @(*) begin : next_state_logic
             else    
                 nxt_state = ccMode;
         end
-        waitC: begin
-            if (!(vtok && rstz && en)) 
-                nxt_state = idle;
-            else
-                nxt_state = start;
-        end
         tcMode: begin
             if (!(vtok && rstz && en)) 
                 nxt_state = idle;
             else if (!C0) 
-                nxt_state = start;
+                nxt_state = idle;
             else if (C3) 
                 nxt_state = ccMode;
             else
@@ -143,7 +136,7 @@ always @(*) begin : next_state_logic
             if (!(vtok && rstz && en)) 
                 nxt_state = idle;
             else if (!C0) 
-                nxt_state = start;
+                nxt_state = idle;
             else if (C4)
                 nxt_state = cvMode;
             else
@@ -153,14 +146,17 @@ always @(*) begin : next_state_logic
             if (!(vtok && rstz && en)) 
                 nxt_state = idle;
             else if (!C0) 
-                nxt_state = start;
+                nxt_state = idle;
             else if (C5 || C6)
                 nxt_state = endC;
             else
                 nxt_state = cvMode;            
         end
         endC: begin
-            nxt_state = idle;
+            if(C7 || !(vtok && rstz && en))
+                nxt_state = idle;
+            else   
+                nxt_state = endC;
         end
         default: nxt_state = idle;
     endcase
@@ -180,11 +176,6 @@ always @(*) begin : output_logic
             vmonen = 1;
             tmonen = 1;
         end
-        start: begin
-            vmonen = 1;
-            tmonen = 1;
-        end
-        waitC: ;
         tcMode: begin
             tc = 1;
             vmonen = 1;
