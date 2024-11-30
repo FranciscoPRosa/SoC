@@ -103,7 +103,7 @@ cc = 1'b1;
 tc = 1'b0; 
 cv = 1'b0; 
 #100 $display("cc=%b, tc=%b, cv=%b, (cv_voltage=3.7V cc=0.2A tc=0.04A) output current is: %f A", cc, tc, cv, rl_iforcedbat);
-if (abs(rl_iforcedbat - 0.2) > tol) begin
+if (abs(rl_iforcedbat - 0.2) > rl_tol) begin
         $display("Error: Expected 0.2A for cc mode, but got %f A", rl_iforcedbat);
         $stop; // stop the simulation
 end
@@ -114,7 +114,7 @@ cc = 1'b0;
 tc = 1'b1;
 cv = 1'b0;
 #100  $display("cc=%b, tc=%b, cv=%b, (cv_voltage=3.7V cc=0.2A tc=0.04A) output current is: %f A, PASSED", cc, tc, cv, rl_iforcedbat);
-if (abs(rl_iforcedbat - 0.04) > tol) begin
+if (abs(rl_iforcedbat - 0.04) > rl_tol) begin
     $display("Error: Expected 0.04A for tc mode, but got %f A", rl_iforcedbat);
     $stop; 
 end
