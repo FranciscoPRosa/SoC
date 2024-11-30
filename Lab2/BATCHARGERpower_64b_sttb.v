@@ -186,7 +186,7 @@ rl_vsensbat = 3.2; // example sensed voltage, the same value as the original tb 
 #10 validate_mode("CV Mode", calculate_voltage_limited_current());
 
 // end of the test bench
-$display("All tests passed successfully")
+$display("All tests passed successfully");
 $finish;
 end
 
