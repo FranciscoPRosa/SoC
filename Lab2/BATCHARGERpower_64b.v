@@ -54,85 +54,32 @@ module BATCHARGERpower_64b (
    wire vref_ok;
 
 
-//--------------------TASKS--------------------
-   task initialize_capacity;
-    begin
-        case(sel)
-            4'b0000: rl_C = 0.05;
-            4'b0001: rl_C = 0.1;
-            4'b0010: rl_C = 0.15;
-            4'b0011: rl_C = 0.2;
-            4'b0100: rl_C = 0.25;
-            4'b0101: rl_C = 0.3;
-            4'b0110: rl_C = 0.35;
-            4'b0111: rl_C = 0.4;
-            4'b1000: rl_C = 0.45;
-            4'b1001: rl_C = 0.5;
-            4'b1010: rl_C = 0.55;
-            4'b1011: rl_C = 0.6;
-            4'b1100: rl_C = 0.65;
-            4'b1101: rl_C = 0.7;
-            4'b1110: rl_C = 0.75;
-            4'b1111: rl_C = 0.8; 
-        endcase
-    end
-   endtask
-
-   task convert_to_real;
-    begin
-        initial assign rl_vsensbat = $bitstoreal(vsensbat);
-        initial assign rl_vin = $bitstoreal(vin);
-        initial assign rl_ibias1u = $bitstoreal(ibias1u);
-        initial assign rl_vref = $bitstoreal(vref);
-        initial assign rl_icc = $bitstoreal(icc);
-        initial assign rl_itc = $bitstoreal(itc);
-        initial assign rl_vcv = $bitstoreal(vcv);
-    end
-    endtask
-
-   task trickle_current_mode;
-    begin
-        rl_iforcedbat = rl_C * (0.502*itc[7]+0.251*itc[6]+0.1255*itc[5]+0.0627*itc[4]+0.0314*itc[3]+0.0157*itc[2]+0.0078*itc[1]+0.0039*itc[0]);
-    end
-   endtask
-
-    task constant_current_mode;
-     begin
-          rl_iforcedbat = rl_C * (0.502*icc[7]+0.251*icc[6]+0.1255*icc[5]+0.0627*icc[4]+0.0314*icc[3]+0.0157*icc[2]+0.0078*icc[1]+0.0039*icc[0]);
-     end
-    endtask
-
-    task constant_voltage_mode;
-     begin
-        Vtarget = 5*(0.502*vcv[7]+0.251*vcv[6]+0.1255*vcv[5]+0.0627*vcv[4]+0.0314*vcv[3]+0.0157*vcv[2]+0.0078*vcv[1]+0.0039*vcv[0]);
-        rl_Rch = 0.4/(0.5*rl_C);
-        rl_iforcedbat = (Vtarget - rl_vsensedbat) / rl_Rch;
-     end
-    endtask
-
 //--------------------MAIN--------------------
 
-    //initialize rl_C depending on sel value
-    initialize_capacity;
-
     //convert inputs to real
-    convert_to_real;
+    initial assign rl_vsensbat = $bitstoreal(vsensbat);
+    initial assign rl_vin = $bitstoreal(vin);
+    initial assign rl_ibias1u = $bitstoreal(ibias1u);
+    initial assign rl_vref = $bitstoreal(vref);
+    initial assign rl_icc = $bitstoreal(icc);
+    initial assign rl_itc = $bitstoreal(itc);
+    initial assign rl_vcv = $bitstoreal(vcv);
 
-    //case of trickle current mode
-    if (tc == 1) begin
-        trickle_current_mode;
-    end
-    //case of constant current mode
-    else if (cc == 1) begin
-        constant_current_mode;
-    end
-    //case of constant voltage mode
-    else if (cv == 1) begin
-        constant_voltage_mode;
-    end
+    //initialize capacity
+    initial assign rl_C = (0.05 + sel[0]*0.05 + sel[1]*0.1 + sel[2]*0.2 + sel[3]*0.4);
 
-    //calculate volatge at vabtcurr
-    rl_vbatcurr = (rl_vref/rl_C)*rl_iforcedbat;
+    initial assign rl_itc = rl_C * (0.502*itc[7]+0.251*itc[6]+0.1255*itc[5]+0.0627*itc[4]+0.0314*itc[3]+0.0157*itc[2]+0.0078*itc[1]+0.0039*itc[0]);
+
+    initial assign rl_icc = rl_C * (0.502*icc[7]+0.251*icc[6]+0.1255*icc[5]+0.0627*icc[4]+0.0314*icc[3]+0.0157*icc[2]+0.0078*icc[1]+0.0039*icc[0]);
+
+    initial assign rl_Rch = 0.4/(0.5*rl_C);
+
+    initial assign rl_vcv = (5*(0.502*vcv[7]+0.251*vcv[6]+0.1255*vcv[5]+0.0627*vcv[4]+0.0314*vcv[3]+0.0157*vcv[2]+0.0078*vcv[1]+0.0039*vcv[0]) - rl_vsensbat) / rl_Rch; 
+
+    initial assign rl_iforcedbat = tc ? rl_itc : (cc ? rl_icc : (cv ? rl_vcv : 0.0));
+
+    initial assign rl_vbatcurr = (rl_vref/rl_C)*rl_iforcedbat;        
+    
 
     //convert outputs from real to bits
     assign iforcedbat = $realtobits (rl_iforcedbat);
