@@ -72,9 +72,9 @@ rl_vin = 5.0; // max value from datasheet
 rl_ibias1u = 1.0e-6; // typical value from the ds to bias the pmos transistor
 
 // current of the differents modes
-icc = 8'b11011111;      // cc mode (iforcedbat = 1.75A according to 0.5C)
-itc = 8'b00101100;      // tc mode (iforcedbat 0.35A with 0.4C)
-vcv = 8'b10111100;      // cv mode (3.7V ==> target voltage)
+icc[7:0]=8'b01111111;      // cc mode (iforcedbat = 0.2A)
+itc[7:0]=8'b00011001;      // tc mode (iforcedbat 0.04A)
+vcv[7:0]=8'b10111100;      // cv mode (3.7V ==> target voltage)
 
 // initialization of the modes to 0
 cc = 1'b0; 
@@ -92,8 +92,8 @@ cc = 1'b1;
 tc = 1'b0; 
 cv = 1'b0; 
 #100 $display("cc=%b, tc=%b, cv=%b, (cv_voltage=3.7V cc=1.75A tc=0.35A) output current is: %f A", cc, tc, cv, rl_iforcedbat);
-if (rl_iforcedbat != 1.75) begin
-        $display("Error: Expected 1.75A for cc mode, but got %f A", rl_iforcedbat);
+if (rl_iforcedbat != 0.2) begin
+        $display("Error: Expected 0.2A for cc mode, but got %f A", rl_iforcedbat);
         $stop; // stop the simulation
 end
 
@@ -102,8 +102,8 @@ cc = 1'b0;
 tc = 1'b1;
 cv = 1'b0;
 #100  $display("cc=%b, tc=%b, cv=%b, (cv_voltage=3.7V cc=1.75A tc=0.35A) output current is: %f A", cc, tc, cv, rl_iforcedbat);
-if (rl_iforcedbat != 0.35) begin
-    $display("Error: Expected 0.35A for tc mode, but got %f A", rl_iforcedbat);
+if (rl_iforcedbat != 0.04) begin
+    $display("Error: Expected 0.04A for tc mode, but got %f A", rl_iforcedbat);
     $stop; 
 end
 
