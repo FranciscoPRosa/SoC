@@ -1,0 +1,658 @@
+\documentclass[12pt]{article}
+
+% ----------------------------------------------------------------------
+% Definir packages externos, língua, margens, tipos de letra, novos 
+% comandos e cores
+% --------decision,-----------------------------------
+\usepackage[utf8]{inputenc} % Codificação utilizada
+\usepackage[english]{babel} % Idioma de escrita
+\usepackage{gensymb}
+\usepackage[export]{adjustbox} % Alinhar imagens
+\usepackage{amsmath} % Comasource. The para escrita matemática
+\usepackage{amssymb} % Símbolos matemáticos
+\usepackage{appendix}
+\usepackage{anysize} % Personalizar as margens
+    \marginsize{2cm}{2cm}{2cm}{2cm} % {esquerda}{direita}{cima}{baixo}
+\usepackage{appendix} % Apêndices
+\usepackage{cancel} % Cancelar expressões
+\usepackage{caption} % Legendas
+    \DeclareCaptionFont{newfont}{\fontfamily{cmss}\selectfont}
+    \captionsetup{labelfont={bf, newfont}}
+\usepackage{cite} % Citações, tipo [1 - 3]
+\usepackage{tcolorbox}
+\usepackage{color} % Colorir texto
+\usepackage{fancyhdr} % Cabeçalho e rodapé
+    \pagestyle{fancy}
+    \fancyhf{}
+    \fancyhead[L]{\footnotesize\fontfamily{cmss}\selectfont IST} % Esquerda do cabeçalho
+    \fancyhead[R]{\footnotesize\fontfamily{cmss}\selectfont ULisboa} % Direita do cabeçalho
+    \fancyfoot[L]{\footnotesize\fontfamily{cmss}\selectfont Systems On-Chip } % Esquerda do rodapé
+    \fancyfoot[C]{\thepage} % Centro do rodapé
+    \fancyfoot[R]{\footnotesize\fontfamily{cmss}\selectfont MEEC} % Direita do rodapé
+    \renewcommand{\footrulewidth}{0.4pt} % Régua do rodapé
+\usepackage{float} % Utilizar o especificador [H] nas figuras
+\usepackage{graphicx} % Imagens em LaTeX
+\usepackage[colorlinks = true, plainpages = true, linkcolor = istblue, urlcolor = istblue, citecolor = istblue, anchorcolor = istblue]{hyperref}
+\usepackage{indentfirst} % Primeiro parágrafo
+\usepackage{siunitx} % Unidades SI
+\usepackage{subcaption} % Subfiguras
+\usepackage{multirow}
+\usepackage{titlesec} % Tipo de letra
+    \titleformat{\section}{\fontfamily{cmss}\selectfont\Large\bfseries}{\thesection}{1em}{}
+    \titleformat{\subsection}{\fontfamily{cmss}\selectfont\large\bfseries}{\thesubsection}{1em}{}
+    \titleformat{\subsubsection}{\fontfamily{cmss}\selectfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+    \fancyfoot[C]{\fontfamily{cmss}\selectfont\thepage}
+
+% Encher de texto aleatório (apagar)
+\usepackage{lipsum}
+\usepackage{duckuments}
+\usepackage{comment}
+
+% Novos e renovar comandos
+\newcommand{\sen}{\operatorname{\sen}} % Definição da função seno
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Definição de uma régua
+\renewcommand{\appendixpagename}{\LARGE \fontfamily{cmss}\selectfont Apêndices}
+\renewcommand{\appendixtocname}{Apêndices}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{verilog}{
+    language=Verilog,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!50!black},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    backgroundcolor=\color{gray!10},
+    frame=single,
+    breaklines=true,
+    showspaces=false,
+    showstringspaces=false,
+    tabsize=4,
+    captionpos=b
+}
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Définition des couleurs et styles
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    language=Verilog,                %  Verilog
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},  % commentaires
+    keywordstyle=\color{magenta},    %  mots-clés
+    numberstyle=\tiny\color{codegray}, %  numéros de ligne
+    stringstyle=\color{codepurple},  % chaînes de caractères
+    basicstyle=\ttfamily\footnotesize, % font style
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    % num de ligne à gauche
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    literate={º}{}1 {≤}{<=}1 % ingore special characters
+}
+
+
+
+\lstset{style=mystyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                               Document                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+% ----------------------------------------------------------------------
+% Capa
+% ----------------------------------------------------------------------
+\begin{center}
+    \begin{figure}
+        \vspace{-1.0cm}
+        \includegraphics[scale = 0.3, left]{Images/IST_A.eps} % Tipo de assinatura do IST
+    \end{figure}
+       \mbox{}\\[2.0cm]
+    \textsc{\Huge  Systems On-Chip}\\[2.5cm]
+    \textsc{\LARGE MEEC}\\[2.0cm]
+    \HRule\\[0.4cm]
+    {\large \bf {\fontfamily{cmss}\selectfont Lab 1 - Verilog design and simulation}}\\[0.2cm]
+    \HRule\\[1.5cm]
+\end{center}
+
+\begin{flushleft}
+    \textbf{\fontfamily{cmss}\selectfont Authors:}
+\end{flushleft}
+
+\begin{center}
+    \begin{minipage}{0.5\textwidth}
+        \begin{flushleft}
+            99531 – Matilde Sardinha \\
+            102546 – Francisco Rosa \\
+            112504 – Thibaut Nivelet
+        \end{flushleft}
+    \end{minipage}%
+\end{center}
+    
+\begin{flushleft}
+    \large $\boxed{\text{\bf \fontfamily{cmss}\selectfont Group} \ 4}$\\[1.0cm]
+\end{flushleft}
+
+
+  
+\begin{center}
+    \large \bf \fontfamily{cmss}\selectfont 2024/2025 -- 1º Semester, P2
+\end{center}
+
+\thispagestyle{empty}
+
+\setcounter{page}{0}
+
+\newpage
+
+
+% --------------------
+% Table of contents
+
+\tableofcontents
+\newpage
+
+%---------------------
+
+\section{Original controller and full charger}
+\subsection{Controller behavior and simulation}
+
+The state machine of the battery controller has six states: \textit{start}, \textit{end}, \textit{TC mode}, \textit{CC mode}, \textit{wait} \textit{CV mode}, as indicated in the testbench of the original controller. The variable \textit{vtok} controls if the battery should start the charging process, being on an idle or equivalent state (in this case) if $vtok == 0$, meaning that the temperature, voltage and current values indicated by the ADC aren't valid. As a result, to initiate the process is necessary to monitor both voltage and temperature in the beginning, so it is necessary to have both $vmonen=1$ and $tmonen=1$. Since the controller has a \textit{start} state, we can assume its outputs are just $vmonen=1$ and $tmonen=1$.
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.9\textwidth]{Original Controller/detail_startState.png}
+    \caption{Simulation of the provided controller block - Start State with the output values}
+    \label{fig:orig_ctr_start}
+\end{figure}
+
+Since we only want to simulate the controller, there is a change for $vtok=1$ and $rstz=1$ (the general reset), after the main initialization, to allow for the start of the charging process. As defined in Fig. 3\cite{batchargerPaper}, the next state is defined by a set of conditions, two regarding voltage and one regarding temperature. If the $T_{min}\leq T_{bat}\leq T_{max}$ condition is not met, the battery will need to cool down or warm up, keeping the outputs $tc=0$, $cc=0$, and $cv=0$. If the battery voltage if higher than $4.2V$ (in the case \texttt{0xD6}), the charging process end immediately ($V_{bat}<4.2V$), going to state \textit{end}. If both these conditions are met, and if $V_{bat}<V_{cutoff}$, the controller will enter \textit{tcMode}, charging the battery will a small current until $V_{bat}>V_{cutoff}$. On the other hand, if this last condition is satisfied, the next state will be \textit{ccMode}, where the battery will be charged using a constant current. 
+
+From Figure \ref{fig:orig_ctr_start}, we can observe that the temperature condition and the first voltage are met, as, in hexadecimal, $2E<64<8B$, with $tbat=64$, and $99<D6$, with $vbat=D6$. Since $vbat<V_{cutoff}$, as $99<A3$, the next state will be \textit{tcMode}, as we can confirm as the output $tc=1$ in Figure \ref{fig:orig_cc_cv}, and by the message received in the terminal. Regarding the monitoring outputs, since we need to monitor the voltage for the next transition, $tmonen=1$ and $vmonen=1$ must be kept\footnote{Regarding the temperature monitoring, as will be explained below, it is needed to make sure the battery does not overheat in any part of the charging process. As such, $tmonen$ will have to be almost always on.}.
+
+The current state will continue being \textit{tcMode} until $vbat>V_{cutoff}$, which happens when the assignment $vbat=$\texttt{0xA4} (as in Figure \ref{fig:orig_cc_cv}), causing the transition to \textit{ccMode}, once again signaled by $cc=1$ and the message in the simulator terminal. Once again, since the transition condition needs the voltage monitoring $vmonen=1$ and $tmonen=1$ to control the temperature. As mentioned in \cite{batchargerPaper}, the transition from \textit{ccMode} to \textit{cvMode} will happen when $vbat=V_{preset}$. 
+
+However, this condition is a bit restrictive, since it would be possible to have an instant jump to a value higher than $V_{preset}$, as it seems to happen here in the testbench, as $V_{preset}=$\texttt{C7}, and $vbat$ jumps to \texttt{C8}, so $vbat\geq V_{preset}$ would be a better transition condition. That seems to be that the case, confirmed by the transition to \textit{cvMode} (confirmed by $cv=1$). Since we have 2 transition conditions here, and one of them regards the current, $vmonen$ goes to $0$, and $imonen=1$, keeping $tmonen=1$. The first condition is fulfilled when $ibat<I_{end}$, and second transition condition checks if the battery spent too much time charging the battery. As mentioned in the testbench this amount to 2040 clock cycles (for $tmax=8$), and since there are no changes to the current $ibat$, the the only way to exit \textit{cvMode} is by timeout.
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.9\textwidth]{Original Controller/detail_CC_CV.png}
+    \caption{Simulation of the provided controller block - Detail from TC, CC and CV Modes}
+    \label{fig:orig_cc_cv}
+\end{figure}
+
+This condition is met just, signaled by $cv=0$. The sequence described above is repeated in Figure \ref{fig:orig_ctr_curr_exit}, but skipping \textit{tcMode}, going directly to \textit{ccMode} ($vbat=$\textit{0xC6}$>V_{cutoff}$), and entering \textit{cvMode} afterwards. However, after reaching \textit{cvMode}, $ibat$ goes to \texttt{0x32}, which is lower than $I_{end}$ (\texttt{0x33}), exiting due to the current condition.
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.9\textwidth]{Original Controller/detail_2nd_simulation.png}
+    \caption{Simulation of the provided controller block - exit condition test detail by $ibat<I_{end}$}
+    \label{fig:orig_ctr_curr_exit}
+\end{figure}
+
+\begin{tcolorbox}[title=Simulation Output from the original controller and testbench, colback=gray!5, colframe=black]
+\small
+\begin{verbatim}
+    Vbat < Vcutoff, waiting tc mode
+    tc mode ok
+    Vbat > Vcutoff waiting cc mode
+    cc mode ok
+    Vbat > Vpreset, waiting cv mode
+    cv mode ok
+    waiting timeout
+    timeout ok
+    voltage reduced, Vbat < Vpreset, waiting cc mode
+    cc mode ok
+    Vbat > Vpreset, waiting cv mode
+    cv mode ok
+    exit cv by minimum current ok
+    Simulation complete via $finish(1) at time 22070 NS + 0
+
+\end{verbatim}
+\end{tcolorbox}
+
+Although this testbench allows us to test some very simple behavior regarding the operation of the controller, some more tests need to be performed, namely to understand a few transitions between states. For example, the provided testbench does not enter the \textit{wait} state anywhere in its operation. As a result, some tests were performed to check the behavior of the state. In Figure \ref{fig:orig_ctr_waitOut}, the controller, originally in the \textit{start}, had the temperature changed, so that $tbat>tempmax$, forcing it to go to \textit{wait}. However, since the outputs remain the same, it is possible to conclude the outputs from both states are the same. 
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.9\textwidth]{Original Controller/ogCont_waitOutputs.png}
+    \caption{Simulation of the provided controller block - \textit{wait} state outputs}
+    \label{fig:orig_ctr_waitOut}
+\end{figure}
+
+The main reason for this seems to be that from the temperature correction, the controller goes directly to the charging modes if the voltage conditions are met (namely $vbat<4.2V$), and, if the temperature is not within bounds, returns to temperature correction mode immediately, as seen in Figure \ref{fig:orig_ctr_tempCorr}.
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.9\textwidth]{Original Controller/ogCont_tempCorr.png}
+    \caption{Simulation of the provided controller block - Temperature Correction Cycle}
+    \label{fig:orig_ctr_tempCorr}
+\end{figure}
+
+As a result, the following output assignment can be inferred from the simulations and figures presented above. This conclusion, together with the provided resources will be used to create the used state machine.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|cccccc|}
+\hline
+\multirow{2}{*}{State} & \multicolumn{6}{c|}{Outputs}                                                                                                   \\ \cline{2-7} 
+ & \multicolumn{1}{c|}{TC} & \multicolumn{1}{c|}{CC} & \multicolumn{1}{c|}{CV} & \multicolumn{1}{c|}{imonen} & \multicolumn{1}{c|}{vmonen} & tmonen \\ \hline
+START                  & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & 1 \\ \hline
+WAIT                   & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & 1 \\ \hline
+TC MODE                & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & 1 \\ \hline
+CC MODE                & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & 1 \\ \hline
+CV MODE                & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{1} & \multicolumn{1}{c|}{0} & 1 \\ \hline
+END                    & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & 0 \\ \hline
+\end{tabular}
+\caption{Output assignment of the original controller's state machine}
+\label{tab:ogCont_outputs}
+\end{table}
+\begin{comment}
+\subsection{Battery Charger Controller}
+
+As soon as $vtok=1$, $rstz$ also switches to one, activating the system reset. The system is in a condition to enter the TC mode, since the voltage is at 3 V, less than the cutoff voltage, 3,2 V. Marker one in figure \ref{fig:orig_ctr_sim} marks the beginning of TC mode.
+
+\begin{figure}[H]
+\centering 
+\includegraphics[width=0.9\textwidth]{Original Controller/simulation_BATCHARGER_ORIGINAL_MARKERS.jpg}
+\caption{Simulation of the controller block - begin of charging}
+\label{fig:orig_ctr_sim}
+\end{figure}
+
+The system remains in TC mode until the battery voltage reaches 3,22 V, surpassing $V_{cutoff}$ and, therefore, entering CC mode (marker two in \ref{fig:orig_ctr_sim}). The battery will charge in this mode until its voltage reaches $V_{preset}$ (3,9V). 
+
+Finally, the voltage reaches $V_{preset}$ and the device starts charging in CV mode (marker three in \ref{fig:orig_ctr_sim}). 
+
+CV mode keeps operating until 2040 clock periods have passed or until the current is less than 0.1 C. The time limit is exceeded at marker 4 in figure \ref{fig:orig_ctr_sim_end}. At marker 5 in \ref{fig:orig_ctr_sim_end} the battery voltage decreases to a value smaller than $V_{cutoff}$ activating the CC mode. In this mode, the voltage increases reaching $V_{preset}$ and triggering the state change to CV mode again (marker 6 in \ref{fig:orig_ctr_sim_end}). Lastly, at marker 7 in \ref{fig:orig_ctr_sim_end}, the charging ends due to the fact that the current goes from 66 mA to 32 mA, becoming less than 0.1 C, with C being 450 mAh. 
+
+\begin{figure}[H]
+\centering 
+\includegraphics[width=0.9\textwidth]{Original Controller/batcharger_prof_simulation_END_CHARGING.jpg}
+\caption{Simulation of the controller block - end of charging}
+\label{fig:orig_ctr_sim_end}
+\end{figure}
+
+This last observation allows us to conclude that when the battery finishes charging, it enters an idle mode, waiting for the next charge to be triggered by a voltage decrease.
+\end{comment}
+
+
+%\subsection{Battery Charger Power}
+%This block is responsible for controlling the charging current depending on the operation mode selected by the controller. The response of this block to each mode signal activation is described in the list below. 
+%\begin{itemize}
+%    \item TC mode : trickle current
+%    \item CC mode : constant current 
+%    \item CV mode : constant voltage 
+%\end{itemize}
+ 
+ 
+
+%\subsection{Battery Charger SAR ADC}
+
+%This block does the analog to digital conversion of all the values measured: temperature ($tbat$), battery voltage($vbat$) and current($ibat$). 
+
+%FIGURA
+
+%When the simulation starts, the values of the temperature, voltage and current measured are not valid. So $vtok$ will remain zero until all values are updated ($tmeasen$, $vmeasen$ and $imeasen$ need to be set to one so that the update can be performed). After gathering the three values, $vtok$ is set to one. FIGURA
+
+\subsection{Full charger simulation}
+
+The full charger testbench enables to check if the integration of the four blocks leads to the battery charge expected. There are five markers placed in Figure \ref{fig:orig_full_charger} (since the \textit{start} state is very short, its blue marker is barely visible in the beginning), marking the start of each state of the original controller (except for \textit{wait}).
+
+\begin{figure}[H]
+\centering 
+\includegraphics[width=0.91\textwidth]{Original Controller/chargerFull.png}
+\caption{Full charger simulation}
+\label{fig:orig_full_charger}
+\end{figure}
+
+
+From figure \ref{fig:orig_full_charger} it is possible to observe that the charging at marker one,initiates an increase in the battery voltage value ($rl\_vbat$), at a constant current ($rl\_ibat$). This corresponds to the CC mode state, as we can see in figure \ref{fig:orig_full_behavior}. 
+
+Before marker 2 (green), the charger is in start mode, going to \textit{tc mode} on the green marker, the battery voltage is bellow $V_{cutoff}$. Here we can clearly observe the battery being charged with a reduced current as supposed. After reaching $V_{cutoff}$, at marker 3 (orange), the state changes to \textit{cc mode}, charging the battery with a constant current as supposed, while the voltage increases, until $vbat=V_{preset}$, entering \textit{cv mode} (purple marker). Unlike the expected behavior shown in Figure \ref{fig:orig_full_behavior}, the battery does not have a constant voltage, since the monitoring is being performed in the battery and not in the power block. Since $V_{preset}\not=V_{cv}$ (as seen in the \texttt{BATCHARGER64b} file), the battery voltage will increase from $V_{preset}=3.9V$ to $V_{cv}\approx4.2V$ as supposed. After $ibat$ decreases under $0.01C$ or $0.004A$, the charging cycle is completed with state \textit{end}. Since there isn't a load, $ibat$ will continue to be $0A$, and the battery voltage will be kept the same, not allowing any possible recharge.
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.6\textwidth]{Original Controller/charge_bhv.png}
+    \caption{Charging behavior of the original charger}
+    \label{fig:orig_full_behavior}
+\end{figure}
+
+\section{Controller design}
+
+\subsection{Definition of signals, conditions and state outputs}
+To design the requested finite state machine (FSM), the first step was the definition of the necessary states, as indicated in \cite{batchargerPaper}, with the identification of the state \texttt{IDLE}, \texttt{END}, \texttt{TC MODE}, \texttt{CC MODE}, \texttt{CV MODE}. As one can see in Table \ref{tab:ogCont_outputs}, both \textit{wait} and \textit{start} have the same outputs, turning them undistinguishable. Thus, both states were merged, creating \texttt{IDLE}. This will be the initial state, and the default to go if there is any problem regarding the control signals. These were, defined by inspecting the testbench files and the laboratory files, the module enable \textit{en}, the reset signal (\textit{rstz}) and the already mentioned \textit{vtok}. This way, the FSM will be locked in this state until all the control signals are in their correct values to continue ($vtok=1$, $rstz=1$ and $en=1$). All states are subject to this condition.
+
+Regarding the transitions between states, these will depend on a set of conditions represented as diamonds in the flow chart(Figure 3 of \cite{batchargerPaper}). These were summarized as follows: 
+\begin{itemize}
+    \item $C_0: T_{min}\leq T_{bat}\leq T_{max}$
+    \item $C_1: V_{bat}<4.2V$
+    \item $C_3=V_{bat}<V_{cutoff}$
+    \item $C_3=V_{bat}>V_{cutoff}$
+    \item $C_4=V_{bat}\geq V_{preset}$
+    \item $C_5=t_{charge}\geq t_{max}$
+    \item $C_{6}=I_{bat}<I_{end}$
+    \item $C_{S}=((rstz==1) \text{and} (en==1) \text{and} (vtok==1))$
+\end{itemize}
+
+The voltage $4.2V$ is used, and the input voltage for the whole charger ($v_{in}=4.5V$) is in agreement with the condition regarding the $200mV$ difference between them both. The variables $T_{min}$, $T_{max}$, $V_{cutoff}$, $V_{preset}$, and $t_{max}$ are read from a memory and will be defined in the testbench during testing (mostly using the same values as before). $I_{end}$ is defined as the "end-of-charging" criteria and is defined as $I_{end}=0.1C$, with $C$ being the nominal current. 
+
+\subsection{Temperature Control}
+
+As mentioned in the laboratory documents, each state does not have constant temperature monitoring, which can be problematic since the temperature of the battery can rise unexpectedly during charging, damaging the equipment. A solution for this problem can be found by forcing a cool-down (or a warm-up) whenever the condition $C_0$ is not met. This temperature change should be corrected by forcing all the outputs that can alter the battery's temperature (namely the current input) to $0$, by forcing \textit{tc=cc=cv=0}, in the output, which happens in state \texttt{IDLE}, for example. 
+
+This way, the FSM will be locked in \texttt{IDLE} until the temperature is corrected. Since this should happen if the battery is subjected to a current, which happens in states \texttt{CC MODE}, \texttt{TC MODE}, and \texttt{CV MODE}, only these states are forced to go to \texttt{IDLE} for temperature correction. 
+
+\subsection{Timer design}
+
+Due to condition $C_5$, it was necessary to create a timer. As indicated in the provided documents, this timer is used to check if the constant voltage segment of the charging process doesn't take more than $t_{max}$ cycles. Each of the necessary cycles of $t_{max}$ is made of 255 clock cycles so, the total maximum time \texttt{CV MODE} must be operational is $t_{max}*255*T$, with $T$ being the clock period. The code for this process can be found below. For each 255 clock cycles (\texttt{8'hff}), $charge-time$ is increased until the FSM enters \texttt{END}, resetting if in any other state than these two. The variable $charge-time$ is kept the same for debugging purposes.
+
+\begin{lstlisting}[style=verilog, caption={Time Counter Logic}, label={lst:time_counter}]
+// Time Counter
+always @(posedge clk) begin
+    if (state == cvMode) begin
+        counter <= counter + 1;
+        if (counter == 8'hff) begin 
+            charge_time <= charge_time + 1;
+            counter <= 0;
+        end
+    end else if (state == endC) begin
+        // No change to counter or charge_time during endC state
+        counter <= counter;
+    end else begin
+        // Reset counter and charge_time if not in cvMode or endC
+        charge_time <= 0;
+        counter <= 0;
+    end
+end
+\end{lstlisting}
+
+
+\subsection{Recharge Control}
+
+As mentioned in the files, the proposed model does not take into account any possibility to recharge the battery. As such, it was defined that the battery would need recharging after dropping to $98\%$ of its maximum voltage and SoC\footnote{State of Charge}\cite{BARAI201599} value. Since the maximum value obtained is lower than $4.2V$ (around $4.18976V$), amounting to $SoC=98.158\%$, $98\%$ of that value is around $96.19\%$, leading a $V_{recharge}$ of around $4.163V$, and a $vbat$ (the battery voltage converted to 8 bits from the ADC block) of \texttt{0xD5}. After reaching the \textttt{END} state, the controller will be stuck in here until the recharging condition $C_7$ (the battery voltage dropping below $V_{recharge}$) is met, restarting the charging process. Since the charging process could start with $vbat>V_{recharge}$ or any of the control signals could not be set accordingly, \texttt{IDLE} will also be limited by the recharge control\footnote{Since \texttt{IDLE} has to monitor the temperature ($tmonen=1$), unlike \texttt{END}, this last state will be the default for waiting for the recharge.}.
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.91\textwidth]{New controller designed/vrecharge_choice.png}
+    \caption{Charging process detailing the choice of $V_{recharge}$}
+    \label{fig:vrecharge}
+\end{figure}
+
+\subsection{Final Finite State Machine}
+
+The used FSM can be seen below, together with the necessary transition conditions. It would be possible to compact the machine, using just 4 states, \texttt{TC MODE}, \texttt{CC MODE}, \texttt{CV MODE}, and a compact version of \texttt{IDLE}, and \texttt{END}, consuming less logic and circuit area. However, this could be counter-productive, making the code less clear, and making debugging a more laborious task. Besides that, while in \texttt{END} equivalent, $tmonen$ would be on unnecessarily, increasing the consumption.  
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{New controller designed/stateMachine.png}
+    \caption{State machine}
+    \label{fig:state_machine}
+\end{figure}
+
+
+\subsection{Output assignment}
+The module has 6 different outputs, \textit{cc}, \textit{tc}, and \textit{cv}, which indicate to the power module which mode to activate, and \textit{imonen}, \textit{vmonen}, \textit{tmonen}, which indicate if the current, voltage, and temperature from the battery should be monitored or not. According to the paper the assignment of the outputs to each state should be as seen in Table \ref{tab:newCont_outputs}.  
+
+% Please add the following required packages to your document preamble:
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|cccccc|}
+\hline
+\multirow{2}{*}{State} &
+  \multirow{2}{*}{Code} &
+  \multicolumn{6}{c|}{Outputs} \\ \cline{3-8} 
+ &  & \multicolumn{1}{c|}{TC} & \multicolumn{1}{c|}{CC} & \multicolumn{1}{c|}{CV} & \multicolumn{1}{c|}{imonen} & \multicolumn{1}{c|}{vmonen} & tmonen \\ \hline
+START &
+  0 &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{1} &
+  1 \\ \hline
+TC MODE &
+  1 &
+  \multicolumn{1}{c|}{1} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{1} &
+  1 \\ \hline
+CC MODE &
+  2 &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{1} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{1} &
+  1 \\ \hline
+CV MODE &
+  3 &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{1} &
+  \multicolumn{1}{c|}{1} &
+  \multicolumn{1}{c|}{0} &
+  1 \\ \hline
+END &
+  4 &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  \multicolumn{1}{c|}{0} &
+  0 \\ \hline
+\end{tabular}
+\caption{Output assignment of the original controller's state machine}
+\label{tab:newCont_outputs}
+\end{table}
+
+
+\subsection{Controller testbench and simulation}
+\label{part:controller_test_part}
+
+In order to test if the controller behavior was as described for the original controller, a self testable testbench was designed. This testbench tested all the transitions in the state machine (Figure \ref{fig:state_machine}) and displayed a message on the console every time a test or a section of it was passed (as seen in the log message below). Each test contains an initialization block that forces every variable to an initial state, and also forcing the initial state \texttt{IDLE}. After that, each test takes place, forcing $vbat$, $ibat$, $tbat$, or any of the control signals ($en$, $rstz$, and $vtok$) to the values necessary for the simulation. If the conditions of one of the tests is not met, the simulation will automatically finish, and an \texttt{ERROR} message will be displayed.
+
+The first test (in Figure \ref{fig:currExit}) consists of a full charge with an exit to end due the current condition ($ i_{bat} < I _{end}$). In this simulation the reset and vtok variables starts at zero meaning that the current mode is \texttt{IDLE}. After reset and vtok are set to one (marker 1, blue, in \ref{fig:currExit}), the simulation moves to start \texttt{START}, and after to \texttt{TCMODE} since $vbat$ ($h'99$) is less than $vcutoff$ ($h'A3$). In marker 2, \texttt{CCMODE} (orange) due to an increase of $vbat$ ($h'A4$), allowing it to surpass $vcutoff$. The next state \texttt{CVMODE} starts at marker 3 (cyan) where $vbat$ value is h' C8, more than $vpreset$, which triggered this mode change. At marker 4 (green), the battery current ($ibat$) drops to $h'32$ being less than $iend$ ($h'33$) sending the simulation to \texttt{END} mode ($cc$, $cv$ and $tc$ are all set to zero).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{New controller designed/newCont_simCtr_currExit.png}
+    \caption{Waveform testbench - Current Exit Test}
+    \label{fig:currExit}
+\end{figure}
+
+The next test consists of a charge that leaves \texttt{CV MODE} due to time out ($t_{charge} > tmax$). This simulation is the same as the previous until it arrives at \texttt{CV MODE} At marker CC (orange), there's a transition to \texttt{CC MODE} due to the reasons described on the last simulation. This transition is followed by a transition to \texttt{CV MODE} at marker CV (cyan). At marker END (green), it's possible to observe the exit by timeout, sending the simulation to \texttt{END}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{New controller designed/newCont_simCtr_timeExit.png}
+    \caption{Waveform testbench - Timeout Exit Test}
+    \label{fig:timeExit}
+\end{figure}
+
+An important feature to test is the exit by temperature that will allow to send the simulation to \texttt{IDLE} state. This happens at marker IDLE (red), the temperature increases to $h'8C$, surpassing $tempmax$ ($h' 8B$), deactivating the \texttt{CCMODE} the battery was currently on. From marker IDLE to CC-2 (orange), $tmonen$ is activated several times to check if the temperature has dropped but since it didn't in that interval, the system remains waiting before passing to any charging mode. At marker CC-2, the temperature drops and a normal charging process starts.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{New controller designed/newCont_simCtr_temperature.png}
+    \caption{Waveform testbench - Temperature Control Test}
+    \label{fig:timeExit}
+\end{figure}
+
+In the case the battery is already charged ($vbat>4.2V$), as indicated in \ref{fig:state_machine}, the controller must transition directly from state \texttt{IDLE} (red marker) to \texttt{END} (green marker), as seen in Figure \ref{fig:fullCharge}). This was also tested, as well as checking if the return to \texttt{IDLE} caused by a missing control signal (in this case \textit{rstz}), as shown in Figure \ref{fig:reset}, where after going to \texttt{TC MODE}, $rstz=0$, transitioning to \texttt{IDLE}, as supposed.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{New controller designed/newCont_simCtr_fullCharge.png}
+    \caption{Waveform testbench - Full Charge Exit}
+    \label{fig:fullCharge}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{New controller designed/newCont_simCtr_reset.png}
+    \caption{Waveform testbench - Reset Exit}
+    \label{fig:reset}
+\end{figure}
+
+The final test performed regards the recharging process. As mentioned above, it was defined that, if $vbat$ drops below $V_{recharge}$, the charging would begin again. This is tested by performing a normal charging cycle, and after that, dropping the voltage. If the output indicates the state is in either \texttt{TC MODE} or \texttt{CC MODE}, the recharging process is being performed as supposed, as can be seen in Figure \ref{fig:recharge}, where after going to \texttt{END} (green), it eventually ends in state \texttt{CC MODE}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{New controller designed/newCont_simCtr_recharge.png}
+    \caption{Waveform testbench - Recharge test designed}
+    \label{fig:recharge}
+\end{figure}
+
+\begin{tcolorbox}[title=New Controller Self-testable Testbench Output Log, colback=gray!5, colframe=black]
+    \tiny % Use \small, \footnotesize, or \scriptsize for smaller fonts
+    \begin{verbatim}
+    ===== TESTING CHARGING PROCESS WITH CURRENT EXIT =====
+    Testing with Vbat < Vcutoff, checking for tc mode
+    Entered tc mode
+    Vbat > Vcutoff, checking for cc mode
+    Entered cc mode
+    Vbat > Vpreset, checking for cv mode
+    Entered cv mode
+    Exited cv mode by minimum current
+    SUCCESS: Exit by minimum current condition
+    ===== TESTING CHARGING PROCESS WITH TEMPERATURE EXIT =====
+    Testing with Vbat < Vcutoff, checking for tc mode
+    Entered tc mode
+    Vbat > Vcutoff, checking for cc mode
+    Entered cc mode
+    Temperature condition met
+    Cooled out, temperature down
+    Tmin <= Tbat <= Tmax, checking for charge beginning
+    Entered tc mode, cc mode for recharge or idle for voltage drop
+    SUCCESS: Temperature control test
+    ===== TESTING CHARGING PROCESS WITH TIMEOUT EXIT =====
+    Testing with Vbat < Vcutoff, checking for tc mode
+    Entered tc mode
+    Vbat > Vcutoff, checking for cc mode
+    Entered cc mode
+    Vbat > Vpreset, checking for cv mode
+    Entered cv mode
+    Exited cv mode by timeout
+    SUCCESS: Exit by timeout condition
+    ===== TESTING CHARGING PROCESS WITH FULL CHARGE EXIT =====
+    Exit by battery fully charged
+    SUCCESS: Exit by full charge
+    ===== TESTING RECHARGING PROCESS WITH CURRENT EXIT =====
+    Testing with Vbat < Vcutoff, checking for tc mode
+    Entered tc mode
+    Vbat > Vcutoff, checking for cc mode
+    Entered cc mode
+    Vbat > Vpreset, checking for cv mode
+    Entered cv mode
+    Voltage decrease to lead to discharge
+    Testing if it entered one of the charging modes (either TC or CC)
+    SUCCESS: Recharge process test passed
+    Testing with Vbat < Vcutoff, checking for tc mode
+    Entered tc mode
+    ===== TESTING RESET EXIT =====
+    SUCCESS: Reset confirmation passed
+    ===== ALL TESTS COMPLETED =====
+    End of simulation
+    Simulation complete via $finish(1) at time 2005340 NS + 0
+    \end{verbatim}
+\end{tcolorbox}
+
+
+
+
+
+\subsection{Full charger testbench and simulation}
+Having verified the behavior of the battery controller in the previous section \ref{part:controller_test_part}, in this part we implement a test to verify the operation of the entire system with all blocks, including the new controller we have designed. The approach used here was different than before. While previously the inputs were defined, and we tested if the behavior was the correct, here the controller inputs are defined by the other modules, as the power, ADC, and battery. This means the approach has to be different, now verifying, in periodic moments, the state of simulation (based on the outputs of the controller), and checking if the state is correct or not given the conditions presented above. If the outputs don't match with the conditions, this means the state is wrong, and the simulation will finish automatically. 
+
+Besides this, to prevent unwanted transitions, it also checks if the combination of the previous and the next state is possible, warning and finishing if otherwise\footnote{It should be noted that this only works if the state machine just has 5 possible outputs, equal to the ones declared in Table \ref{tab:ogCont_outputs}.}. This method allows for changes in any of the modules\footnote{However, if constants like $I_{end}$, or $V_{cutoff}$ are changed, the variables in the testbench must be changed.}, like, for example, changing the battery module to test if the temperature control is respected.
+
+The simulation checks the state every 5000 clock cycles, repeating the process 5000 times, totaling 2.5 million clock cycles. Each time the state changes, one notification is sent to the console, indicating where the state changed and to which state it went. At the end of the simulation if checks if it fully charged, finishing if the battery is not fully charged. A message will appear if the every check was performed successfully.
+
+Below in Figure \ref{fig:full_battery_waveform}, it is possible to notice the correct behavior, entering \texttt{TC MODE} at the green marker, then \texttt{CC MODE} at the blue one, \texttt{CV MODE} at the red, and finally \texttt{END} at orange.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{New controller designed/newCont_fullCharger.png}
+    \caption{Waveform testbench - Full battery charger simulation}
+    \label{fig:full_battery_waveform}
+\end{figure}
+
+\begin{tcolorbox}[title=New Controller Self-testable Charger Testbench Output Log, colback=gray!5, colframe=black]
+    \small
+    \begin{verbatim}
+    ===== Starting the testbench and charging the battery =====
+    Correct state - IDLE at time 110000
+    Correct state - TC MODE at time 5300000
+    Correct state - CC MODE at time 145300000
+    Correct state - CV MODE at time 4350300000
+    Correct state - END MODE at time 13270300000
+    Verification completed or timed out after 5000 time units
+    Test 1 : battery fully charged, Vbat=4.189846
+    ==== Test concluded with success ====
+    \end{verbatim}
+\end{tcolorbox}
+\listoffigures
+
+Another test performed was the temperature control of the module. Since the temperature condition is always met, it was necessary to change the file of the battery to test this condition. As:
+
+\begin{equation}
+    T_{bat}=T_{amb}+\frac{E_{ESR}-E_{conv}}{m*c}
+\end{equation}
+
+Where $T_{amb}$ is the ambient temperature, $E_{ESR}$ is the integral of the power of heating generated by the $ESR$ (Equivalent Series Resistance), and $E_{conv}$ is the integral over time ($h*A*(T_{bat} - T_A) $), where h is heat transfer coefficient of medium around battery ($25 W/(m^2   K)$) for air) and A the contact area (total area of the battery exposed to the air), in this case, for a \textit{26x9x3.5mm} battery, $A = 0.0007 m^2$. So, to allow for faster temperature drops and rises, $ESR$ was changed to $1$, and $T_{amb}=42$. This resulted in fast variations between the cooling (at \texttt{IDLE}) and the charging (in this case, almost always with \texttt{CC MODE}). This caused very fast variations in current as seen in Figure \ref{fig:full_battery_waveformTemp}. Since $vbat$ never gets to $V_{preset}$, it will constantly go back and forth between \texttt{IDLE} and \texttt{CC MODE}, until the $vbat>4.2V$, when it goes to \texttt{END}. This shows that the temperature condition $C_0$ might be somewhat restrictive, not letting the temperature drop enough to allow for a full charging cycle.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{New controller designed/newCont_fullChargerTemp.png}
+    \caption{Waveform testbench - Full battery charger simulation, Temperature control change}
+    \label{fig:full_battery_waveformTemp}
+\end{figure}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+
+% ==== import appendix (Verilog code) ====
+\newpage
+\appendix
+\section{Verilog code of the new controller}
+\lstinputlisting[caption={Verilog code of the new controller}, label={lst:controller}]{BATCHARGERctr.v}
+
+\newpage
+\section{Verilog code of the testbench of the new controller}
+\lstinputlisting[caption={Verilog code of the testbench (tb) of the new controller}, label={lst:controller_tb}]{BATCHARGERctr_tb.v}
+
+\newpage
+\section{Verilog code of the testbench of the whole charger}
+\lstinputlisting[caption={Verilog code of the testbench of the whole charger}, label={lst:charger_sttb}]{BATCHARGER_64b_tb.v}
+
+% ==========
+
+\end{document}
