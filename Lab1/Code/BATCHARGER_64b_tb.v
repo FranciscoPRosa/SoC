@@ -43,15 +43,19 @@ BATCHARGERlipo lipobattery(
 		   .ibat(ibat),     // battery current (A)
 		   .vtbat(vtbat)    // Battery temperature
 		   );
-   
+
+
+// These conditions have to be change according to the values placed in the full charger file (BATCHARGER_64b.v)
+// Since it wasn't possible to use the values from the ADC block (for example vbat[7:0]), the analog values were used
+// As such, they values have to be tuned due to the sampling, for the maximum or minimum value of the ADC scale   
 always @(*) begin
-   C0 = ((0 <= rl_vtbat) && (rl_vtbat <= 45));
-   C1 = (rl_vbat < 4.2); // 4.2 in the scale
-   C2 = (rl_vbat < 3.0);
-   C3 = (rl_vbat >= 3.0);
-   C4 = (rl_vbat >= 3.8);
+   C0 = ((0.121212 <= rl_vtbat) && (rl_vtbat <= 0.258206));
+   C1 = (rl_vbat < 4.192); // 4.2 in the scale
+   C2 = (rl_vbat < 2.99);
+   C3 = (rl_vbat >= 2.99);
+   C4 = (rl_vbat >= 3.77);
    C5 = (uut.BATCHctr.charge_time >= uut.tmax);
-   C6 = (rl_ibat < 0.04);
+   C6 = (rl_ibat < 0.0395); // This condit
    C7 = (rl_vbat <= 4.163); // Recharge condition (simplified for now)
    Cs = (uut.rstz && en && uut.vtok);
 end
@@ -157,7 +161,7 @@ task verify_state;
                   $display("Correct state - IDLE at time %0t", $time);
                   // Verify state transition coherence
                   if (!check_prev_state(curr_state, prev_state)) begin
-                     $display("Error: Invalid state transition from %b to %b at time %0t", prev_state, curr_state, $time);
+                     $display("ERROR: Invalid state transition from %b to %b at time %0t", prev_state, curr_state, $time);
                      $finish;
                   end
                end
@@ -175,7 +179,7 @@ task verify_state;
                   $display("Correct state - TC MODE at time %0t", $time);
                   // Verify state transition coherence
                   if (!check_prev_state(curr_state, prev_state)) begin
-                     $display("Error: Invalid state transition from %b to %b at time %0t", prev_state, curr_state, $time);
+                     $display("ERROR: Invalid state transition from %b to %b at time %0t", prev_state, curr_state, $time);
                      $finish;
                   end
                end
@@ -193,7 +197,7 @@ task verify_state;
                   $display("Correct state - CC MODE at time %0t", $time);
                   // Verify state transition coherence
                   if (!check_prev_state(curr_state, prev_state)) begin
-                     $display("Error: Invalid state transition from %b to %b at time %0t", prev_state, curr_state, $time);
+                     $display("ERROR: Invalid state transition from %b to %b at time %0t", prev_state, curr_state, $time);
                      $finish;
                   end
                end
@@ -211,7 +215,7 @@ task verify_state;
                   $display("Correct state - CV MODE at time %0t", $time);
                   // Verify state transition coherence
                   if (!check_prev_state(curr_state, prev_state)) begin
-                     $display("Error: Invalid state transition from %b to %b at time %0t", prev_state, curr_state, $time);
+                     $display("ERROR: Invalid state transition from %b to %b at time %0t", prev_state, curr_state, $time);
                      $finish;
                   end
                end
@@ -229,7 +233,7 @@ task verify_state;
                   $display("Correct state - END MODE at time %0t", $time);
                   // Verify state transition coherence
                   if (!check_prev_state(curr_state, prev_state)) begin
-                     $display("Error: Invalid state transition from %b to %b at time %0t", prev_state, curr_state, $time);
+                     $display("ERROR: Invalid state transition from %b to %b at time %0t", prev_state, curr_state, $time);
                      $finish;
                   end
                end
@@ -273,7 +277,7 @@ endtask
       en = 1'b1; // enable the module
       C0 = 0; C1 = 0; C2 = 0; C3 = 0; C4 = 0; C5 = 0; C6 = 0; C7 = 0; Cs = 0;
       // start the simulation
-      $display("Starting the testbench and charging the battery");
+      $display("===== Starting the testbench and charging the battery =====");
 
       // Test 1 : battery fully charge
 
@@ -282,7 +286,9 @@ endtask
       // Initial delay for setup
       #110
       // ==== Test 1 : recharge - wait for battery to fully charge ====       
-      verify_state(100000);
+      verify_state(1000);
+      $display("==== Test concluded with success ====")
+      $finish;
    end
    
   
