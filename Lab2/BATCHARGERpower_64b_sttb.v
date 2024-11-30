@@ -39,6 +39,8 @@ module BATCHARGERpower_64b_sttb;
    real rl_itc;
    real rl_vvc;
 
+   real rl_tol = 1e-3; // tolerance of 1 mA for the comparison
+
 // create the instance
 BATCHARGERpower_64b uut (
 			 .iforcedbat(iforcedbat),
@@ -62,6 +64,15 @@ BATCHARGERpower_64b uut (
                          .pgnd(pgnd)			 
 ); 
 
+// declaration of the function abs
+function real abs(input real value);
+    begin
+        if (value < 0)
+            abs = -value;
+        else
+            abs = value;
+    end
+endfunction
 
 initial
 begin
@@ -91,32 +102,35 @@ en = 1'b1; // enables the powerblock module
 cc = 1'b1;   
 tc = 1'b0; 
 cv = 1'b0; 
-#100 $display("cc=%b, tc=%b, cv=%b, (cv_voltage=3.7V cc=1.75A tc=0.35A) output current is: %f A", cc, tc, cv, rl_iforcedbat);
-if (rl_iforcedbat != 0.2) begin
+#100 $display("cc=%b, tc=%b, cv=%b, (cv_voltage=3.7V cc=0.2A tc=0.04A) output current is: %f A", cc, tc, cv, rl_iforcedbat);
+if (abs(rl_iforcedbat - 0.2) > tol) begin
         $display("Error: Expected 0.2A for cc mode, but got %f A", rl_iforcedbat);
         $stop; // stop the simulation
 end
+#10 $display("CC mode passed");
 
 // tc mode test
 cc = 1'b0; 
 tc = 1'b1;
 cv = 1'b0;
-#100  $display("cc=%b, tc=%b, cv=%b, (cv_voltage=3.7V cc=1.75A tc=0.35A) output current is: %f A", cc, tc, cv, rl_iforcedbat);
-if (rl_iforcedbat != 0.04) begin
+#100  $display("cc=%b, tc=%b, cv=%b, (cv_voltage=3.7V cc=0.2A tc=0.04A) output current is: %f A, PASSED", cc, tc, cv, rl_iforcedbat);
+if (abs(rl_iforcedbat - 0.04) > tol) begin
     $display("Error: Expected 0.04A for tc mode, but got %f A", rl_iforcedbat);
     $stop; 
 end
+#10 $display("TC mode passed");
 
 // cv mode test
 cc = 1'b0;
 tc = 1'b0;
-cv = 1'b1; // Active le mode constant voltage
+cv = 1'b1;
 #100
-$display("cc=%b, tc=%b, cv=%b, (cv_voltage=3.7V cc=1.75A tc=0.35A) output current is: %f A", cc, tc, cv, rl_iforcedbat);
+$display("cc=%b, tc=%b, cv=%b, (cv_voltage=3.7V cc=0.2A tc=0.04A) output current is: %f A, PASSED", cc, tc, cv, rl_iforcedbat);
 if (rl_vsensbat != 3.7) begin
         $display("Error: Expected 3.7V for cv mode, but got %f V", rl_vsensbat);
         $stop; 
 end
+#10 $display("CV mode passed");
 
 // test enable = 0 ==> no current iforcedbat?
 en = 1'b0; // desactivate the module
