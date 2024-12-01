@@ -55,7 +55,7 @@ parameter   idle = 3'b000,
 reg C0, C1, C2, C3, C4, C5, C6, C7;
 
 // Value obtained by analyzing the waveform of the charging process
-reg [7:0] vrecharge = 8'hd5; // D5 in hexadecimal (corresponds to 96.2% of SoC, or approx. 4.163V)
+reg [7:0] vrecharge = 8'hd0; // D5 in hexadecimal (corresponds to 96.2% of SoC, or approx. 4.163V)
 
 reg [2:0] state, nxt_state;
 
@@ -93,7 +93,7 @@ end
 // Condition updater
 always @(*) begin
     C0 <= ((tempmin <= tbat) && (tbat <= tempmax));
-    C1 <= (vbat < 8'b11001100); // 4.2 in the scale
+    C1 <= (vbat < 8'b11010110); // 4.2 in the scale
     C2 <= (vbat < vcutoff);
     C3 <= (vbat >= vcutoff);
     C4 <= (vbat >= vpreset);
@@ -111,16 +111,18 @@ end
 always @(*) begin : next_state_logic
     case (state)
         idle: begin
-            if (!(vtok && rstz && en && C7)) 
+            if (!(vtok && rstz && en)) 
                 nxt_state = idle;
             else if (!C0)  
                 nxt_state = idle;
             else if (!C1)  
                 nxt_state = endC;
-            else if (C2)  
+            else if (C2 && C7)  
                 nxt_state = tcMode;
-            else    
+            else if (!C2 && C7)
                 nxt_state = ccMode;
+            else
+                nxt_state = idle;
         end
         tcMode: begin
             if (!(vtok && rstz && en)) 
@@ -193,6 +195,14 @@ always @(*) begin : output_logic
         end
         endC: begin
             vmonen = 1;
+        end
+        default: begin
+            cc = 0;
+            tc = 0;
+            cv = 0;
+            imonen = 0;
+            vmonen = 0;
+            tmonen = 0;
         end
     endcase
 end
