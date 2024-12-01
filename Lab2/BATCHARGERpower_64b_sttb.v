@@ -41,10 +41,14 @@ module BATCHARGERpower_64b_sttb;
 
    real rl_tol; // tolerance for the computations of the current iforced and voltage 
    real rl_C; // real capacity value
+   real rl_R; // real resistance value
    // expected value of the current for the different modes and the voltage for cv mode
    real expected_tc;
    real expected_cc;
-   real expected_cv; 
+   real expected_vtarget;
+   real expected_current_cv;
+
+
 
 // create the instance
 BATCHARGERpower_64b uut (
@@ -113,10 +117,6 @@ function real calculate_vtarget(input [7:0] vcv);
     end
 endfunction
 
-
-
-
-
 // test bench
 initial
 begin
@@ -140,7 +140,8 @@ cv = 1'b0;
 sel = 4'b0111; // for 400mAh
 // to compute the value of the capa
 rl_C = (0.05 + sel[0]*0.05 + sel[1]*0.1 + sel[2]*0.2 + sel[3]*0.4);
-
+// to compute the value of the res
+rl_R = 0.4 / (0.5 * rl_C);
 
 en = 1'b1; // enables the powerblock module
 
@@ -152,7 +153,7 @@ tc = 1'b0;
 cv = 1'b0; 
 expected_cc = calculate_current(icc, rl_C); // call to the function defined before
 
-#100 $display("cc=%b, tc=%b, cv=%b, (cv_voltage=%f V cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_cv, expected_cc, expected_tc, rl_iforcedbat);
+#100 $display("cc=%b, tc=%b, cv=%b, (cv=%f A cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
 if (abs(rl_iforcedbat - expected_cc) > rl_tol) begin
         $display("Error: Expected %f A for cc mode, but got %f A",expected_cc, rl_iforcedbat);
         $stop; // stop the simulation
@@ -165,7 +166,7 @@ tc = 1'b1;
 cv = 1'b0;
 expected_tc = calculate_current(itc,rl_C);
 
-#100 $display("cc=%b, tc=%b, cv=%b, (cv_voltage=%f V cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_cv, expected_cc, expected_tc, rl_iforcedbat);
+#100 $display("cc=%b, tc=%b, cv=%b, (cv =%f A cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
 if (abs(rl_iforcedbat - expected_tc) > rl_tol) begin
     $display("Error: Expected %f A for tc mode, but got %f A",expected_tc, rl_iforcedbat);
     $stop; 
@@ -176,12 +177,13 @@ end
 cc = 1'b0;
 tc = 1'b0;
 cv = 1'b1;
-expected_cv = calculate_vtarget(vcv);
+expected_vtarget = calculate_vtarget(vcv);
+expected_current_cv = (expected_vtarget - rl_vsensbat) / rl_R;
 
 #100
-#100 $display("cc=%b, tc=%b, cv=%b, (cv_voltage=%f V cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_cv, expected_cc, expected_tc, rl_iforcedbat);
-if (abs(rl_vsensbat-expected_cv>rl_tol)) begin
-        $display("Error: Expected %f V for cv mode, but got %f V", expected_cv, rl_vsensbat);
+#100 $display("cc=%b, tc=%b, cv=%b, (cv=%f A cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
+if (abs(rl_iforcedbat-expected_current_cv>rl_tol)) begin
+        $display("Error: Expected %f A for cv mode, but got %f A", expected_current_cv, rl_iforcedbat);
         $stop; 
 end
 #10 $display("CV mode PASSED");
