@@ -158,7 +158,7 @@ expected_vtarget = calculate_vtarget(vcv);
 expected_current_cv = (expected_vtarget - rl_vsensbat) / rl_R;
 
 
-#100 $display("cc=%b, tc=%b, cv=%b, (cv=%f A cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
+#100 $display("cc=%b, tc=%b, cv=%b, (iforcedcv=%f A iforcedcc=%f A iforcedtc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
 #100 $display("===== TESTING CC MODE ===== ");
 if (abs(rl_iforcedbat - expected_cc) > rl_tol) begin
         $display("Error: Expected %f A for cc mode, but got %f A",expected_cc, rl_iforcedbat);
@@ -173,7 +173,7 @@ cv = 1'b0;
 
 
 #100 $display("===== TESTING TC MODE ===== ");
-#100 $display("cc=%b, tc=%b, cv=%b, (cv =%f A cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
+#100 $display("cc=%b, tc=%b, cv=%b, (iforcedcv =%f A iforcedcc=%f A iforcedtc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
 if (abs(rl_iforcedbat - expected_tc) > rl_tol) begin
     $display("Error: Expected %f A for tc mode, but got %f A",expected_tc, rl_iforcedbat);
     $stop; 
@@ -186,7 +186,7 @@ tc = 1'b0;
 cv = 1'b1;
 
 #100 $display("===== TESTING CV MODE ===== ");
-#100 $display("cc=%b, tc=%b, cv=%b, (cv=%f A cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
+#100 $display("cc=%b, tc=%b, cv=%b, (iforcedcv=%f A iforcedcc=%f A iforcedtc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
 if (abs(rl_iforcedbat-expected_current_cv>rl_tol)) begin
         $display("Error: Expected %f A for cv mode, but got %f A", expected_current_cv, rl_iforcedbat);
         $stop; 
