@@ -76,7 +76,7 @@ module BATCHARGERpower_64b (
 
     initial assign rl_vcv = (5*(0.502*vcv[7]+0.251*vcv[6]+0.1255*vcv[5]+0.0627*vcv[4]+0.0314*vcv[3]+0.0157*vcv[2]+0.0078*vcv[1]+0.0039*vcv[0]) - rl_vsensbat) / rl_Rch; 
 
-    initial assign rl_iforcedbat = tc ? rl_itc : (cc ? rl_icc : (cv ? rl_vcv : 0.0));
+    initial assign rl_iforcedbat = en ? (tc ? rl_itc : (cc ? rl_icc : (cv ? rl_vcv : 0.0))): 0.0;
 
     initial assign rl_vbatcurr = (rl_vref/rl_C)*rl_iforcedbat;        
     
