@@ -52,10 +52,10 @@ parameter   idle = 3'b000,
     - C6: ibat<iend
     - C7: Recharge condition (if the battery voltage drops below 20% of the SoC, the charger should start charging the battery again)   
 */
-reg C0, C1, C2, C3, C4, C5, C6, C7;
+reg C0, C1, C2, C3, C4, C5, C6, C7, Cs;
 
 // Value obtained by analyzing the waveform of the charging process
-reg [7:0] vrecharge = 8'hd0; // D5 in hexadecimal (corresponds to 96.2% of SoC, or approx. 4.163V)
+reg [7:0] vrecharge = 8'hd5; // D5 in hexadecimal (corresponds to 96.2% of SoC, or approx. 4.163V)
 
 reg [2:0] state, nxt_state;
 
@@ -63,9 +63,12 @@ reg [2:0] state, nxt_state;
 // Also it is assumed that the max value is 2^8=255 clock cycles 
 reg [7:0] charge_time, counter;
 
+
+// Change to become sensible to changes in reset to update the state
+
 // State updater
-always @(posedge clk) begin
-    if (!rstz)
+always @(posedge clk or negedge Cs) begin
+    if (!Cs)
         state <= idle;
     else
         state <= nxt_state;
@@ -90,17 +93,34 @@ always @(posedge clk) begin
 end
 
 
-// Condition updater
-always @(*) begin
-    C0 <= ((tempmin <= tbat) && (tbat <= tempmax));
-    C1 <= (vbat < 8'b11010110); // 4.2 in the scale
-    C2 <= (vbat < vcutoff);
-    C3 <= (vbat >= vcutoff);
-    C4 <= (vbat >= vpreset);
-    C5 <= (charge_time >= tmax);
-    C6 <= (ibat < iend);
-    C7 <= (vbat <= vrecharge); // Recharge condition (simplified for now)
+// Condition Updater
+always @(posedge clk or negedge rstz) begin
+    if (!rstz) begin
+        C0 <= 1'b0;
+        C1 <= 1'b0;
+        C2 <= 1'b0;
+        C3 <= 1'b0;
+        C4 <= 1'b0;
+        C5 <= 1'b0;
+        C6 <= 1'b0;
+        C7 <= 1'b0;
+    end else begin
+        C0 <= ((tempmin <= tbat) && (tbat <= tempmax));
+        C1 <= (vbat < 8'b11010110); // 4.2 in the scale
+        C2 <= (vbat < vcutoff);
+        C3 <= (vbat >= vcutoff);
+        C4 <= (vbat >= vpreset);
+        C5 <= (charge_time >= tmax);
+        C6 <= (ibat < iend);
+        C7 <= (vbat <= vrecharge); // Recharge condition
+    end
 end
+
+// Asynchronous `Cs`
+always @(*) begin
+    Cs = (en && vtok && rstz);
+end
+
 
 
 // Next State Logic
@@ -111,7 +131,7 @@ end
 always @(*) begin : next_state_logic
     case (state)
         idle: begin
-            if (!(vtok && rstz && en)) 
+            if (!Cs) 
                 nxt_state = idle;
             else if (!C0)  
                 nxt_state = idle;
@@ -125,7 +145,7 @@ always @(*) begin : next_state_logic
                 nxt_state = idle;
         end
         tcMode: begin
-            if (!(vtok && rstz && en)) 
+            if (!Cs) 
                 nxt_state = idle;
             else if (!C0) 
                 nxt_state = idle;
@@ -135,7 +155,7 @@ always @(*) begin : next_state_logic
                 nxt_state = tcMode;  
         end
         ccMode: begin
-            if (!(vtok && rstz && en)) 
+            if (!Cs) 
                 nxt_state = idle;
             else if (!C0) 
                 nxt_state = idle;
@@ -145,7 +165,7 @@ always @(*) begin : next_state_logic
                 nxt_state = ccMode; 
         end
         cvMode: begin
-            if (!(vtok && rstz && en)) 
+            if (!Cs) 
                 nxt_state = idle;
             else if (!C0) 
                 nxt_state = idle;
@@ -155,7 +175,7 @@ always @(*) begin : next_state_logic
                 nxt_state = cvMode;            
         end
         endC: begin
-            if(C7 || !(vtok && rstz && en))
+            if(C7 || !Cs)
                 nxt_state = idle;
             else   
                 nxt_state = endC;

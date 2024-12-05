@@ -159,12 +159,13 @@ module BATCHARGERctr_tb;
 
     // Task for reset behavior testing
     task reset;
-        begin
+        begin            
+            $display("===== TESTING RESET EXIT =====");
             initialization;
+            en = 1;
             rstz = 1;
             tcmode;
-            $display("===== TESTING RESET EXIT =====");
-            #50 rstz = 0; // Reset signal activated
+            #50 en = 0; // Reset signal activated
             #20; // Small delay
             if (tc == 1 || cv == 1 || cc == 1) begin
                 $display("ERROR: Reset confirmation failed");
