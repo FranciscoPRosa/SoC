@@ -61,9 +61,6 @@ module BATCHARGERpower_64b (
     initial assign rl_vin = $bitstoreal(vin);
     initial assign rl_ibias1u = $bitstoreal(ibias1u);
     initial assign rl_vref = $bitstoreal(vref);
-    initial assign rl_icc = $bitstoreal(icc);
-    initial assign rl_itc = $bitstoreal(itc);
-    initial assign rl_vcv = $bitstoreal(vcv);
 
     //initialize capacity
     initial assign rl_C = (0.05 + sel[0]*0.05 + sel[1]*0.1 + sel[2]*0.2 + sel[3]*0.4);

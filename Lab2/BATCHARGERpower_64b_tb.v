@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module BATCHARGERpower_64b_sttb;
+module BATCHARGERpower_64b_tb;
    wire [63:0] iforcedbat; // output current to battery
    wire [63:0] vbatcurr;    // ibat value scaled 1000:1 * (R=Vref/C)
    wire [63:0] vsensbat; // voltage sensed (obtained at the battery as "voltage from iforcedbat integration" + ESR * iforcedbat )		     
@@ -168,13 +168,13 @@ for (sel=4'b0000; sel<=4'b1111; sel=sel+1) begin
     // expected current in cv mode
     expected_vtarget = calculate_vtarget(vcv);
     expected_current_cv = (expected_vtarget - rl_vsensbat) / rl_R;
-    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_ibat,rl_vref);
     // CC mode
     cc = 1'b1;   
     tc = 1'b0;
     cv = 1'b0; 
     #100 $display("***** TEST for C=%f Ah *****", rl_C);
-    #100 $display("===== TESTING CC MODE ===== ");
+    #100 $display("===== TESTING CC MODE ===== ");    
+    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_iforcedbat,rl_vref);
     #100 $display("cc=%b, tc=%b, cv=%b, (iforcedcv=%f A iforcedcc=%f A iforcedtc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
     if (abs(rl_iforcedbat - expected_cc) > rl_tol) begin
         $display("Error: Expected %f A for cc mode, but got %f A",expected_cc, rl_iforcedbat);
@@ -191,7 +191,7 @@ for (sel=4'b0000; sel<=4'b1111; sel=sel+1) begin
     tc = 1'b1;
     cv = 1'b0;
     #100 $display("===== TESTING TC MODE ===== ");
-    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_ibat,rl_vref);
+    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_iforcedbat,rl_vref);
     #100 $display("cc=%b, tc=%b, cv=%b, (iforcedcv =%f A iforcedcc=%f A iforcedtc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
     if (abs(rl_iforcedbat - expected_tc) > rl_tol) begin
         $display("Error: Expected %f A for tc mode, but got %f A",expected_tc, rl_iforcedbat);
@@ -209,7 +209,7 @@ for (sel=4'b0000; sel<=4'b1111; sel=sel+1) begin
     cv = 1'b1;
 
     #100 $display("===== TESTING CV MODE ===== ");
-    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_ibat,rl_vref);
+    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_iforcedbat,rl_vref);
     #100 $display("cc=%b, tc=%b, cv=%b, (iforcedcv=%f A iforcedcc=%f A iforcedtc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
     if (abs(rl_iforcedbat-expected_current_cv>rl_tol)) begin
             $display("Error: Expected %f A for cv mode, but got %f A", expected_current_cv, rl_iforcedbat);
@@ -224,7 +224,7 @@ for (sel=4'b0000; sel<=4'b1111; sel=sel+1) begin
     // test enable = 0 ==> no current iforcedbat?
     en = 1'b0; // desactivate the module
     #100 $display("===== TESTING DESACTIVATION OF THE MODULE =====");
-    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_ibat,rl_vref);
+    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_iforcedbat,rl_vref);
     #10; // waiting
     if (rl_iforcedbat != 0) begin
         $display("ERROR: Expected iforcedbat = 0 A when en = 0, but got %f A", rl_iforcedbat);
@@ -234,7 +234,6 @@ for (sel=4'b0000; sel<=4'b1111; sel=sel+1) begin
     end
 
     #100 $display("===== ALL TESTS COMPLETED FOR C=%f Ah =====", rl_C);
-    #100 $display("=============================================");
 
 end
 

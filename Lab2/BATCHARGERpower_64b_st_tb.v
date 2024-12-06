@@ -41,15 +41,10 @@ module BATCHARGERpower_64b_sttb;
 
    real rl_tol; // tolerance for the computations of the current iforced and voltage 
    real rl_C; // real capacity value
-   real rl_R; // real resistance value
    // expected value of the current for the different modes and the voltage for cv mode
    real expected_tc;
    real expected_cc;
-   real expected_vtarget;
-   real expected_current_cv;
-   real expected_vbatcurr;
-
-
+   real expected_cv; 
 
 // create the instance
 BATCHARGERpower_64b uut (
@@ -118,20 +113,6 @@ function real calculate_vtarget(input [7:0] vcv);
     end
 endfunction
 
-function real calculate_capacity(input [3:0] sel);
-    // input : sel[3..0] defined previously
-    // out : the real capacity calculate_capacity 
-    begin
-        calculate_capacity = 0.05 + (sel[3] * 0.400 + sel[2] * 0.200 + sel[1] * 0.1 + sel[0] * 0.05);
-    end
-endfunction
-
-function real calculate_vbatcurr(input real capacity, input real iBat, input real vref);
-    begin
-        calculate_vbatcurr = (vref/capacity)*iBat;
-    end
-endfunction
-
 
 // test bench
 initial
@@ -153,92 +134,68 @@ cc = 1'b0;
 tc = 1'b0; 
 cv = 1'b0; 
 
+sel = 4'b0111; // for 400mAh
+// to compute the value of the capa
+rl_C = (0.05 + sel[0]*0.05 + sel[1]*0.1 + sel[2]*0.2 + sel[3]*0.4);
+
+
+en = 1'b1; // enables the powerblock module
 
 #10 // we wait to let the module working well
 
-// test multiple values of capacities
-for (sel=4'b0000; sel<=4'b1111; sel=sel+1) begin
-    en=1'b1;
-    rl_C = calculate_capacity(sel);
-    #10 
-    rl_R = 0.4 / (0.5 * rl_C);
-    // calculate the expected current in each mode
-    expected_cc = calculate_current(icc, rl_C); // expected current cc with call to the function defined before
-    expected_tc = calculate_current(itc,rl_C); // expected current tc
-    // expected current in cv mode
-    expected_vtarget = calculate_vtarget(vcv);
-    expected_current_cv = (expected_vtarget - rl_vsensbat) / rl_R;
-    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_ibat,rl_vref);
-    // CC mode
-    cc = 1'b1;   
-    tc = 1'b0;
-    cv = 1'b0; 
-    #100 $display("***** TEST for C=%f Ah *****", rl_C);
-    #100 $display("===== TESTING CC MODE ===== ");
-    #100 $display("cc=%b, tc=%b, cv=%b, (iforcedcv=%f A iforcedcc=%f A iforcedtc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
-    if (abs(rl_iforcedbat - expected_cc) > rl_tol) begin
+// cc mode test 
+cc = 1'b1;   
+tc = 1'b0; 
+cv = 1'b0; 
+expected_cc = calculate_current(icc, rl_C); // call to the function defined before
+
+#100 $display("cc=%b, tc=%b, cv=%b, (cv_voltage=%f V cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_cv, expected_cc, expected_tc, rl_iforcedbat);
+if (abs(rl_iforcedbat - expected_cc) > rl_tol) begin
         $display("Error: Expected %f A for cc mode, but got %f A",expected_cc, rl_iforcedbat);
         $stop; // stop the simulation
-        end
-    if(abs(rl_vbatcurr - expected_vbatcurr) > rl_tol) begin
-        $display("Error: Expected %f V for cc mode, but got %f V",expected_vbatcurr, rl_vbatcurr);
-        $stop; // stop the simulation
-    end
-    #10 $display("SUCCESS: CC mode with expected value of the current");
+end
+#10 $display("CC mode PASSED");
 
-    // TC mode
-    cc = 1'b0; 
-    tc = 1'b1;
-    cv = 1'b0;
-    #100 $display("===== TESTING TC MODE ===== ");
-    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_ibat,rl_vref);
-    #100 $display("cc=%b, tc=%b, cv=%b, (iforcedcv =%f A iforcedcc=%f A iforcedtc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
-    if (abs(rl_iforcedbat - expected_tc) > rl_tol) begin
-        $display("Error: Expected %f A for tc mode, but got %f A",expected_tc, rl_iforcedbat);
+// tc mode test
+cc = 1'b0; 
+tc = 1'b1;
+cv = 1'b0;
+expected_tc = calculate_current(itc,rl_C);
+
+#100 $display("cc=%b, tc=%b, cv=%b, (cv_voltage=%f V cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_cv, expected_cc, expected_tc, rl_iforcedbat);
+if (abs(rl_iforcedbat - expected_tc) > rl_tol) begin
+    $display("Error: Expected %f A for tc mode, but got %f A",expected_tc, rl_iforcedbat);
+    $stop; 
+end
+#10 $display("TC mode PASSED");
+
+// cv mode test
+cc = 1'b0;
+tc = 1'b0;
+cv = 1'b1;
+expected_cv = calculate_vtarget(vcv);
+
+#100
+#100 $display("cc=%b, tc=%b, cv=%b, (cv_voltage=%f V cc=%f A tc=%f A) output current is: %f A", cc, tc, cv, expected_cv, expected_cc, expected_tc, rl_iforcedbat);
+if (abs(rl_vsensbat-expected_cv>rl_tol)) begin
+        $display("Error: Expected %f V for cv mode, but got %f V", expected_cv, rl_vsensbat);
         $stop; 
-    end
-    if(abs(rl_vbatcurr - expected_vbatcurr) > rl_tol) begin
-        $display("Error: Expected %f V for cc mode, but got %f V",expected_vbatcurr, rl_vbatcurr);
-        $stop; // stop the simulation
-    end
-    #10 $display("SUCCESS: TC mode with expected value of the current");
+end
+#10 $display("CV mode PASSED");
 
-    // CV mode test
-    cc = 1'b0;
-    tc = 1'b0;
-    cv = 1'b1;
-
-    #100 $display("===== TESTING CV MODE ===== ");
-    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_ibat,rl_vref);
-    #100 $display("cc=%b, tc=%b, cv=%b, (iforcedcv=%f A iforcedcc=%f A iforcedtc=%f A) output current is: %f A", cc, tc, cv, expected_current_cv, expected_cc, expected_tc, rl_iforcedbat);
-    if (abs(rl_iforcedbat-expected_current_cv>rl_tol)) begin
-            $display("Error: Expected %f A for cv mode, but got %f A", expected_current_cv, rl_iforcedbat);
-            $stop; 
-    end
-    if(abs(rl_vbatcurr - expected_vbatcurr) > rl_tol) begin
-        $display("Error: Expected %f V for cc mode, but got %f V",expected_vbatcurr, rl_vbatcurr);
-        $stop; // stop the simulation
-    end
-    #10 $display("SUCCESS: CV mode with expected value of the current");
-
-    // test enable = 0 ==> no current iforcedbat?
-    en = 1'b0; // desactivate the module
-    #100 $display("===== TESTING DESACTIVATION OF THE MODULE =====");
-    expected_vbatcurr = calculate_vbatcurr(rl_C,rl_ibat,rl_vref);
-    #10; // waiting
-    if (rl_iforcedbat != 0) begin
-        $display("ERROR: Expected iforcedbat = 0 A when en = 0, but got %f A", rl_iforcedbat);
-        $stop;  
-    end else begin
-        $display("SUCCESS: iforcedbat is correctly 0 A when en = 0.");
-    end
-
-    #100 $display("===== ALL TESTS COMPLETED FOR C=%f Ah =====", rl_C);
-    #100 $display("=============================================");
-
+// test enable = 0 ==> no current iforcedbat?
+en = 1'b0; // desactivate the module
+#10; // waiting
+if (rl_iforcedbat != 0) begin
+    $display("Error: Expected iforcedbat = 0 A when en = 0, but got %f A", rl_iforcedbat);
+    $stop;  
+end else begin
+    $display("Success: iforcedbat is correctly 0 A when en = 0.");
 end
 
+
 $finish();
+
 end
 
 
