@@ -213,6 +213,7 @@ for (sel=4'b0000; sel<=4'b1111; sel=sel+1) begin
     end
 
     #100 $display("===== ALL TESTS COMPLETED FOR C=%f Ah =====", rl_C);
+    #100 $display("=============================================");
 
 end
 
