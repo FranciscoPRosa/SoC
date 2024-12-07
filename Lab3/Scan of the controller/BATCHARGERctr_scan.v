@@ -31,7 +31,15 @@ module BATCHARGERctr(
             
             // Vdd and Gnd 
             inout        dvdd, // digital supply
-            inout        dgnd // digital ground
+            inout        dgnd, // digital ground
+
+            // scan variables
+            input si, //scan input
+            input se, //scan ouput
+            output so //scan ouput
+
+
+
         );
 
 // State parameters
