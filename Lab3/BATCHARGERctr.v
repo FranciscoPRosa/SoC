@@ -39,11 +39,11 @@ module BATCHARGERctr(
 // State parameters - Changed to Gray Enconding
 parameter 
     IDLE    = 3'b000,  // Start state
-    CCMODE  = 3'b010,  // Change 2 bits from IDLE (000 -> 010)
-    TRANSIT = 3'b011,  // Change 2 bits from CVMODE (011 -> 101)
-    CVMODE  = 3'b101,  // Change 2 bits from CCMODE (010 -> 011)
-    TCMODE  = 3'b100,  // Change 2 bits from TRANSIT (101 -> 100)
-    ENDC    = 3'b001;  // Change 2 bits from TCMODE (100 -> 001)
+    CCMODE  = 3'b001,  // Change 1 bit from IDLE (000 -> 001)
+    CVMODE  = 3'b011,  // Change 1 bit from CCMODE (001 -> 011)
+    TRANSIT = 3'b010,  // Change 1 bit from CVMODE (011 -> 010)
+    TCMODE  = 3'b110,  // Change 1 bit from TRANSIT (010 -> 110)
+    ENDC    = 3'b100;  // Change 1 bit from TCMODE (110 -> 100)
 
 // Value obtained by analyzing the waveform of the charging process
 //reg [7:0] vrecharge = 8'hd5; // D5 in hexadecimal (corresponds to 96.2% of SoC, or approx. 4.163V)
