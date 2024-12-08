@@ -33,12 +33,7 @@ module BATCHARGERctr(
             
             // Vdd and Gnd 
             inout        dvdd, // digital supply
-            inout        dgnd, // digital ground
-            
-            // scan variables
-            input si, //scan input
-            input se, //scan ouput
-            output so //scan ouput
+            inout        dgnd // digital ground
         );
 
 // State parameters - Changed to Gray Enconding
