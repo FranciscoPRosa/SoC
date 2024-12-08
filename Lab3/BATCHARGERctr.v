@@ -82,9 +82,9 @@ always @(posedge clk) begin
 end
 
 // Simplified Next State Logic
-always @(negedge clk or negedge en) begin
+always @(posedge clk or negedge en) begin
     if (!en) begin
-        // Synchronous reset to IDLE state
+        // Synchronous enable to IDLE state
         nxt_state <= IDLE;
     end else if (!rstz || !vtok) begin
         // Disable condition
@@ -93,9 +93,9 @@ always @(negedge clk or negedge en) begin
         // State transition logic
         case (state)
             IDLE: begin
-                if (!(tempmin <= tbat) || !(tbat <= tempmax))
+                if (!(tempmin <= tbat <= tempmax) || !(vbat <= 8'hd5))
                     nxt_state <= IDLE;
-                else if (vbat >= 8'hd5)
+                else if (vbat >= 8'hd6)
                     nxt_state <= ENDC;
                 else if (vbat < vcutoff)
                     nxt_state <= TCMODE;
@@ -104,28 +104,28 @@ always @(negedge clk or negedge en) begin
             end
             
             TCMODE: begin
-                if (!(tempmin <= tbat) || !(tbat <= tempmax))
+                if (!(tempmin <= tbat <= tempmax))
                     nxt_state <= IDLE;
                 else if (vbat >= vcutoff)
                     nxt_state <= CCMODE;
             end
             
             CCMODE: begin
-                if (!(tempmin <= tbat) || !(tbat <= tempmax))
+                if (!(tempmin <= tbat <= tempmax))
                     nxt_state <= IDLE;
                 else if (vbat >= vpreset)
                     nxt_state <= TRANSIT;
             end
 
             TRANSIT: begin
-                if (!(tempmin <= tbat) || !(tbat <= tempmax))
+                if (!(tempmin <= tbat <= tempmax))
                     nxt_state <= IDLE;
                 else if(charge_time >= 8'h01)
                     nxt_state <= CVMODE;
             end
 
             CVMODE: begin
-                if (!(tempmin <= tbat) || !(tbat <= tempmax))
+                if (!(tempmin <= tbat <= tempmax))
                     nxt_state <= IDLE;
                 else if ((charge_time >= tmax) || (ibat <= iend))
                     nxt_state <= ENDC;
@@ -144,48 +144,59 @@ always @(negedge clk or negedge en) begin
     end
 end
 // Output Logic
-always @(*) begin : output_logic
-    // By default, all outputs are zeroed
-    cc = 1'b0; 
-    tc = 1'b0; 
-    cv = 1'b0; 
-    imonen = 1'b0; 
-    vmonen = 1'b0; 
-    tmonen = 1'b0;
-    case (state)
-        IDLE: begin
-            vmonen = 1'b1;
-            tmonen = 1'b1;
-        end
+always @(posedge clk or negedge en) begin
+    if (!en) begin
+        // Reset all outputs to default values
+        cc <= 1'b0; 
+        tc <= 1'b0; 
+        cv <= 1'b0; 
+        imonen <= 1'b0; 
+        vmonen <= 1'b0; 
+        tmonen <= 1'b0;
+    end else begin
+        // By default, set outputs to zero
+        cc <= 1'b0; 
+        tc <= 1'b0; 
+        cv <= 1'b0; 
+        imonen <= 1'b0; 
+        vmonen <= 1'b0; 
+        tmonen <= 1'b0;
+        case (state)
+            IDLE: begin
+                vmonen <= 1'b1;
+                tmonen <= 1'b1;
+            end
 
-        TCMODE: begin
-            tc = 1'b1;
-            vmonen = 1'b1;
-            tmonen = 1'b1;
-        end
+            TCMODE: begin
+                tc <= 1'b1;
+                vmonen <= 1'b1;
+                tmonen <= 1'b1;
+            end
 
-        CCMODE: begin
-            cc = 1'b1;
-            vmonen = 1'b1;
-            tmonen = 1'b1;
-        end
+            CCMODE: begin
+                cc <= 1'b1;
+                vmonen <= 1'b1;
+                tmonen <= 1'b1;
+            end
 
-        TRANSIT: begin
-            cv = 1'b1;
-            imonen = 1'b1;
-            tmonen = 1'b1;
-        end  
+            TRANSIT: begin
+                cv <= 1'b1;
+                imonen <= 1'b1;
+                tmonen <= 1'b1;
+            end  
 
-        CVMODE: begin
-            cv = 1'b1;
-            imonen = 1'b1;
-            tmonen = 1'b1;
-        end
-        ENDC: begin
-            vmonen = 1'b1;
-        end
-    endcase
+            CVMODE: begin
+                cv <= 1'b1;
+                imonen <= 1'b1;
+                tmonen <= 1'b1;
+            end
 
+            ENDC: begin
+                vmonen <= 1'b1;
+            end
+        endcase
+    end
 end
+
 
 endmodule
