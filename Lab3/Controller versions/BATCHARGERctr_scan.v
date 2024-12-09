@@ -32,13 +32,13 @@ module BATCHARGERctr(
             input 	     rstz, // system reset (general reset, sends to IDLE)
             
             // Vdd and Gnd 
-       //     inout        dvdd, // digital supply
-     //       inout        dgnd, // digital ground
-
+            inout        dvdd, // digital supply
+            inout        dgnd, // digital ground
+            
+            // Added pins for scan
             input       si,
             input       se,
             output      so
-
         );
 
 // State parameters - Gray Encoding 
@@ -46,8 +46,8 @@ parameter
     IDLE    = 3'b000,  // Start state
     TCMODE  = 3'b001,  // Change 1 bit from IDLE (000 -> 001)
     CCMODE  = 3'b011,  // Change 1 bit from CCMODE (001 -> 011)
-    TRANSIT = 3'b010,  // Change 1 bit from CVMODE (011 -> 010)
-    CVMODE  = 3'b110,  // Change 1 bit from TRANSIT (010 -> 110)
+    TRANSIT = 3'b010,  // Change 1 bit from TRANSIT (011 -> 010)
+    CVMODE  = 3'b110,  // Change 1 bit from CVMODE (010 -> 110)
     ENDC    = 3'b100;  // Change 1 bit from TCMODE (110 -> 100)
 
 reg [2:0] state;
@@ -60,7 +60,7 @@ reg [7:0] charge_time, counter;
 // State updater - prioritizes reset, then enable
 
 // Take "negedge en" to maximize Fault Coverage
-always @(posedge clk or negedge en) begin
+always @(posedge clk/* or negedge en*/) begin
     if (!en) begin
         // Unconditional reset to IDLE state
         state <= IDLE;
@@ -94,70 +94,69 @@ end
 
 // Next State Logic - reset and transition logic
 always @(posedge clk) begin
-    if (!rstz) begin
+    // State transitions only when enabled and ADC is valid
+    if (!rstz || !vtok || !(tempmin <= tbat && tbat <= tempmax)) begin
         // Reset to IDLE on system reset
         nxt_state <= IDLE;
     end else if (en) begin
-        // State transitions only when enabled and ADC is valid
-        if (!vtok || !(tempmin <= tbat && tbat <= tempmax)) begin
-            // Disable condition moves to IDLE
-            nxt_state <= IDLE;
-        end else begin
-            // Existing state transition logic
-            case (state)
-                IDLE: begin
-                    if (vbat >= 8'hd6)
-                        nxt_state <= ENDC;
-                    else if (vbat < vcutoff)
-                        nxt_state <= TCMODE;
-                    else
-                        nxt_state <= CCMODE;
-                end
-                
-                TCMODE: begin
-                    if (vbat >= vcutoff)
-                        nxt_state <= CCMODE;
-                end
-                
-                CCMODE: begin
-                    if (vbat >= vpreset)
-                        nxt_state <= TRANSIT;
-                end
+        // Existing state transition logic
+        case (state)
+            IDLE: begin
+                if (vbat >= 8'hd6)
+                    nxt_state <= ENDC;
+                else if (vbat < vcutoff)
+                    nxt_state <= TCMODE;
+                else
+                    nxt_state <= CCMODE;
+            end
+            
+            TCMODE: begin
+                if (vbat >= vcutoff)
+                    nxt_state <= CCMODE;
+            end
+            
+            CCMODE: begin
+                if (vbat >= vpreset)
+                    nxt_state <= TRANSIT;
+            end
 
-                TRANSIT: begin
-                    if(charge_time >= 8'h01)
-                        nxt_state <= CVMODE;
-                end
+            TRANSIT: begin
+                if(charge_time >= 8'h01)
+                    nxt_state <= CVMODE;
+            end
 
-                CVMODE: begin
-                    if ((charge_time >= tmax) || (ibat <= iend))
-                        nxt_state <= ENDC;
-                    else 
-                        nxt_state <= CVMODE;
-                end
-                
-                ENDC: begin
-                    if (vbat <= 8'hd5)
-                        nxt_state <= IDLE;
-                end
-
-                default: 
+            CVMODE: begin
+                if ((charge_time >= tmax) || (ibat <= iend))
+                    nxt_state <= ENDC;
+                else 
+                    nxt_state <= CVMODE;
+            end
+            
+            ENDC: begin
+                if (vbat <= 8'hd5)
                     nxt_state <= IDLE;
-            endcase
-        end
+            end
+
+            default: 
+                nxt_state <= IDLE;
+        endcase
     end
 end
 
 // Output Logic - reset and update logic
 always @(*) begin
-        // Reset outputs to zero by default
-        cc <= 1'b0; 
-        tc <= 1'b0; 
-        cv <= 1'b0; 
-        imonen <= 1'b0; 
-        vmonen <= 1'b0; 
-        tmonen <= 1'b0;
 
+    // Reset outputs to zero by default
+    cc <= 1'b0; 
+    tc <= 1'b0; 
+    cv <= 1'b0; 
+    imonen <= 1'b0; 
+    vmonen <= 1'b0; 
+    tmonen <= 1'b0;
+    if(!en) begin
+        vmonen <= 1'b1; 
+        tmonen <= 1'b1;
+    end else begin
         // State-based output logic
         case (state)
             IDLE: begin
@@ -193,6 +192,7 @@ always @(*) begin
                 vmonen <= 1'b1;
             end
         endcase
+    end
 end
 
 endmodule
